@@ -1,0 +1,40 @@
+<template>
+    <div style="grid-template-rows: 2fr 12fr; display: grid; height: 100%">
+        <div style="background-color: #EF6C7E;">
+            <div class="slds-align_absolute-center slds-p-top_x-large">
+                <select onchange={handleSelect} class="selectfractal">
+                    <option value="levy">Levy curve</option>
+                    <option value="glacial">Glacial fractal</option>
+                    <option value="koch">Koch snowflake</option>
+                    <option value="minkowski">Minkowski curve</option>
+                </select>
+            </div>
+        </div>
+        <div style="background-color: #F8C0C8;">
+            <template if:true={isMinkowski}>
+                <div class="slds-p-around_x-large slds-align_absolute-center">
+                    <canvas id="myCanvas" style="width: 90%; height: 90%; border:1px solid #000000;"></canvas>
+                    isMinkowski
+                </div>
+            </template>
+            <template if:true={isGlacial}>
+                <div class="slds-p-around_x-large slds-align_absolute-center">
+                    <canvas style="width: 90%; height: 90%; border:1px solid #000000;"></canvas>
+                    isGlacial
+                </div>
+            </template>
+            <template if:true={isKoch}>
+                <div class="slds-p-around_x-large slds-align_absolute-center">
+                    <canvas style="width: 90%; height: 90%; border:1px solid #000000;"></canvas>
+                    isKoch
+                </div>
+            </template>
+            <template if:true={isLevy}>
+                <div class="slds-p-around_x-large slds-align_absolute-center">
+                    <canvas style="width: 90%; height: 90%; border:1px solid #000000;"></canvas>
+                    isLevy
+                </div>
+            </template>
+        </div>
+    </div>
+</template>
