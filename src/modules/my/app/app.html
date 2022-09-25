@@ -1,0 +1,88 @@
+<template>
+    <div class={mainGrid}>
+        <template if:false={isOpenRightBar}>
+            <div style="background-color: #FF5376; display: flex; align-items: center;">
+                <button class="iconbutton" onclick={handleOpenRightBar}>
+                    <i style='font-size:20px; color: white;' class='fas'>&#xf061;</i>
+                </button>
+            </div>
+        </template>
+        <template if:true={isOpenRightBar}>
+            <div style="background-color: #FF5376;">
+                <div class="slds-grid  slds-grid_vertical slds-p-top_small" style="height: 50%">
+                    <div class="slds-col">
+                        <button name="home" class={homeStyle} onclick={handleActiveModule}>Home</button>
+                    </div>
+                    <div class="slds-col">
+                        <button name="fractals" class={fractalsStyle} onclick={handleActiveModule}>Fractals</button>
+                    </div>
+                    <div class="slds-col">
+                        <button name="colors" class={colorsStyle} onclick={handleActiveModule}>Colors</button>
+                    </div>
+                    <div class="slds-col">
+                        <button name="rotations" class={rotationsStyle} onclick={handleActiveModule}>Rotations</button>
+                    </div>
+                </div>
+                <div style="display: flex; align-items: center;">
+                    <button class="iconbutton" onclick={handleCloseRightBar}>
+                        <i style='font-size:20px; color: white;' class='fas'>&#xf060;</i>
+                    </button>
+                </div>
+            </div>
+        </template>
+        <template if:true={isActiveFractals}>
+            <div style="background-color: #F7B6BF;">
+                <my-fractals></my-fractals>
+            </div>
+        </template>
+        <template if:true={isActiveColors}>
+            <div style="background-color: #F7B6BF;">
+                <my-colors></my-colors>
+            </div>
+        </template>
+        <template if:true={isActiveRotations}>
+            <div style="background-color: #F7B6BF;">
+                <my-rotations></my-rotations>
+            </div>
+        </template>
+        <template if:true={isActiveHome}>
+            <div style="background-color: #F7B6BF;">
+                <div class="slds-grid slds-grid_vertical" style="height:100%">
+                    <div class="slds-col">
+                    </div>
+                    <div class="slds-col" style="display: flex; align-items: center;">
+                        <div class="slds-grid slds-grid_vertical slds-align_absolute-center slds-p-right_small">
+                            <div class="slds-col logoname">
+                                Graficly
+                            </div>
+                            <template if:true={isShowInfo}>
+                                <div class="slds-col">
+                                    {information}
+                                </div>
+                            </template>
+                        </div>
+                    </div>
+                    <div class="slds-col">
+                        <div class="slds-grid">
+                            <div class="slds-col slds-size_3-of-12 slds-align_absolute-center reference">
+                              <a href="https://lwc.dev/" style="color: white;">Blog</a>
+                            </div>
+                            <div class="slds-col slds-size_3-of-12 slds-align_absolute-center reference">
+                              <a href="https://lwc.dev/" style="color: white;">About us</a>
+                            </div>
+                            <div class="slds-col slds-size_4-of-12" style="display: flex; align-items: center;">
+                                <div class="slds-align_absolute-center reference">
+                                    <a href="https://lwc.dev/" style="color: white;">Resources</a>
+                                </div>
+                                <div onclick={handleShowInformation}>
+                                    <img src="../../../resources/pantera1.png" style="width: 200px; height:auto">
+                                    <img>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </template>
+    </div>
+</template>
