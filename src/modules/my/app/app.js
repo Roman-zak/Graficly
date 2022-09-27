@@ -11,9 +11,9 @@ export default class App extends LightningElement {
 
     index = 0;
     listOfInformation = [
-        'Some information about fractals example 1', 
-        'Some information about fractals example 2', 
-        'Some information about fractals example 3', 
+        'Hello. Do you know that in captivity Panther lives about 20 years, in nature 12?', 
+        'Although we are here not for learning about panthers facts. Only about fractals - only base', 
+        'Lets go through this great trip with me!', 
     ];
     
     get mainGrid(){ return this.isOpenRightBar ? 'openwrapper modulebar' : 'closewrapper modulebar'}
@@ -43,8 +43,13 @@ export default class App extends LightningElement {
     }
 
     handleShowInformation(){
-        this.isShowInfo = !this.isShowInfo;
-        if(this.index == this.listOfInformation.length) this.index = 0;
+        if(this.index == this.listOfInformation.length){
+            this.isShowInfo = false;
+            this.index = 0;
+            return;
+        }
+
+        this.isShowInfo = true;
         this.information = this.listOfInformation[this.index];
         this.index++;
     }

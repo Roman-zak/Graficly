@@ -9,24 +9,31 @@
         </template>
         <template if:true={isOpenRightBar}>
             <div style="background-color: #FF5376;">
-                <div class="slds-grid  slds-grid_vertical slds-p-top_small" style="height: 50%">
-                    <div class="slds-col">
-                        <button name="home" class={homeStyle} onclick={handleActiveModule}>Home</button>
+                <div style="grid-template-rows: 1fr 1fr; display: grid; height: 100%">
+                    <div>
+                        <div class="slds-grid  slds-grid_vertical slds-gutters slds-p-top_small" style="height: 100%">
+                            <div class="slds-col">
+                                <button name="home" class={homeStyle} onclick={handleActiveModule}>Home</button>
+                            </div>
+                            <div class="slds-col">
+                                <button name="fractals" class={fractalsStyle} onclick={handleActiveModule}>Fractals</button>
+                            </div>
+                            <div class="slds-col">
+                                <button name="colors" class={colorsStyle} onclick={handleActiveModule}>Colors</button>
+                            </div>
+                            <div class="slds-col">
+                                <button name="rotations" class={rotationsStyle} onclick={handleActiveModule}>Rotations</button>
+                            </div>
+                            <div class="slds-col">
+                                <button name="rotations" class="modulebutton" onclick={handleCloseRightBar}>Close</button>
+                            </div>
+                        </div>
                     </div>
-                    <div class="slds-col">
-                        <button name="fractals" class={fractalsStyle} onclick={handleActiveModule}>Fractals</button>
+                    <div style="position: relative;">
+                        <div style="position: absolute; bottom: 0; left: 0;">
+                            <img src="../../../resources/pantera2.png" style="width: 400px; height:auto">
+                        </div>
                     </div>
-                    <div class="slds-col">
-                        <button name="colors" class={colorsStyle} onclick={handleActiveModule}>Colors</button>
-                    </div>
-                    <div class="slds-col">
-                        <button name="rotations" class={rotationsStyle} onclick={handleActiveModule}>Rotations</button>
-                    </div>
-                </div>
-                <div style="display: flex; align-items: center;">
-                    <button class="iconbutton" onclick={handleCloseRightBar}>
-                        <i style='font-size:20px; color: white;' class='fas'>&#xf060;</i>
-                    </button>
                 </div>
             </div>
         </template>
@@ -51,15 +58,17 @@
                     <div class="slds-col">
                     </div>
                     <div class="slds-col" style="display: flex; align-items: center;">
-                        <div class="slds-grid slds-grid_vertical slds-align_absolute-center slds-p-right_small">
+                        <div class="slds-grid slds-grid_vertical slds-align_absolute-center slds-p-right_xx-small">
                             <div class="slds-col logoname">
                                 Graficly
                             </div>
-                            <template if:true={isShowInfo}>
-                                <div class="slds-col">
-                                    {information}
-                                </div>
-                            </template>
+                            <div class="slds-col" style="height: 90px; width: 600px">
+                                <template if:true={isShowInfo}>
+                                    <div class="slds-p-around_x-large slds-align_absolute-center information">
+                                        {information}
+                                    </div>
+                                </template>
+                            </div>
                         </div>
                     </div>
                     <div class="slds-col">

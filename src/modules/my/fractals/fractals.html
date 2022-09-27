@@ -1,39 +1,68 @@
 <template>
-    <div style="grid-template-rows: 2fr 12fr; display: grid; height: 100%">
+    <div style="grid-template-rows: 100px 12fr; display: grid; height: 100%">
         <div style="background-color: #EF6C7E;">
-            <div class="slds-align_absolute-center slds-p-top_x-large">
-                <select onchange={handleSelect} class="selectfractal">
-                    <option value="levy">Levy curve</option>
-                    <option value="glacial">Glacial fractal</option>
-                    <option value="koch">Koch snowflake</option>
-                    <option value="minkowski">Minkowski curve</option>
-                </select>
+            <div class="slds-grid">
+                <div class="slds-col slds-size_4-of-12">
+                    <div class="slds-text-align_center" style="grid-template-rows: 1fr 3fr; display: grid; height: 100%">
+                        <div class="slds-text-align_center label">
+                            <div>Choose fractal</div>
+                        </div>
+                        <div>
+                            <select id="fractal" onchange={handleSelect} class="selectfractal">
+                                <option value="levy">Levy curve</option>
+                                <option value="ice">Ice fractal</option>
+                                <option value="koch">Koch snowflake</option>
+                                <option value="minkowski">Minkowski curve</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="slds-col slds-size_4-of-12">
+                </div>
+                <div class="slds-col slds-size_4-of-12 slds-p-bottom_medium slds-align_absolute-center" style="height: 100%;">
+                    <button class="downloadbutton" onclick={handleDownloadImg}>Download</button>
+                </div>
             </div>
         </div>
         <div style="background-color: #F8C0C8;">
-            <template if:true={isMinkowski}>
-                <div class="slds-p-around_x-large slds-align_absolute-center">
-                    <canvas id="myCanvas" style="width: 90%; height: 90%; border:1px solid #000000;"></canvas>
-                    isMinkowski
-                </div>
-            </template>
-            <template if:true={isGlacial}>
-                <div class="slds-p-around_x-large slds-align_absolute-center">
-                    <canvas style="width: 90%; height: 90%; border:1px solid #000000;"></canvas>
-                    isGlacial
-                </div>
-            </template>
-            <template if:true={isKoch}>
-                <div class="slds-p-around_x-large slds-align_absolute-center">
-                    <canvas style="width: 90%; height: 90%; border:1px solid #000000;"></canvas>
-                    isKoch
-                </div>
-            </template>
-            <template if:true={isLevy}>
-                <div class="slds-p-around_x-large slds-align_absolute-center">
-                    <canvas style="width: 90%; height: 90%; border:1px solid #000000;"></canvas>
-
-                    Levy
+            <div>
+                <template if:true={isMinkowski}>
+                    <div class="slds-p-around_x-large slds-align_absolute-center">
+                        <canvas onclick={handleShowInformation} width="840" height="340" style="width: 100%; height: 90%; border:1px solid #000000;"></canvas>
+                    </div>
+                </template>
+                <template if:true={isIce}>
+                    <div class="slds-p-around_x-large slds-align_absolute-center">
+                        <canvas onclick={handleShowInformation} width="840" height="340" style="width: 100%; height: 90%; border:1px solid #000000;"></canvas>
+                    </div>
+                </template>
+                <template if:true={isKoch}>
+                    <div class="slds-p-around_x-large slds-align_absolute-center">
+                        <canvas onclick={handleShowInformation} width="840" height="340" style="width: 100%; height: 90%; border:1px solid #000000;"></canvas>
+                    </div>
+                </template>
+                <template if:true={isLevy}>
+                    <div class="slds-p-around_x-large slds-align_absolute-center">
+                        <canvas onclick={handleShowInformation} width="840" height="340" style="width: 100%; height: 90%; border:1px solid #000000;"></canvas>
+                    </div>
+                </template>
+            </div>
+            <template if:true={isShowInfo}>
+                <div class="slds-p-around_x-large" style="width: 100%; height: 90%;">
+                    <div onclick={handleShowInformation} class="slds-p-around_x-large slds-align_absolute-center information">
+                        <div>In mathematics, a fractal is a geometric shape containing detailed structure at 
+                            arbitrarily small scales, usually having a fractal dimension strictly exceeding 
+                            the topological dimension. Many fractals appear similar at various scales, as 
+                            illustrated in successive magnifications of the Mandelbrot set. This exhibition 
+                            of similar patterns at increasingly smaller scales is called self-similarity, also
+                             known as expanding symmetry or unfolding symmetry; if this replication is exactly 
+                             the same at every scale, as in the Menger sponge, the shape is called affine self-similar. 
+                             Fractal geometry lies within the mathematical branch of measure theory.
+                        </div>
+                        <div class="slds-p-top_xx-large">
+                            <img class="slds-col" src="../../../resources/pantera3.png" style="width: auto; height:180px">
+                        </div>
+                    </div>
                 </div>
             </template>
         </div>

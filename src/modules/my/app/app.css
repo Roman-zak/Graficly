@@ -57,3 +57,12 @@
     font-weight: bold;
     font-family: 'Jaldi';
 }
+
+.information{
+    height: 80px; 
+    width: 600px;
+    border-radius: 20px;
+    background-color: #FBDADE;
+    font-size: 16px;
+    font-family: 'Jaldi';
+}
