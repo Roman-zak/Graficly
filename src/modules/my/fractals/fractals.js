@@ -22,7 +22,7 @@ export default class Fractals extends LightningElement {
           
             if(this.isIce) drawIce(ctx, 5);
             if(this.isKoch) drawKoch(ctx, 5);
-            if(this.isLevy) drawLevy(13, ctx);
+            if(this.isLevy) drawLevy(12, ctx);
             if(this.isMinkowski) drawMinkowski(ctx, 5);
         }
     }

@@ -77,35 +77,29 @@ export function drawMinkowski(ctx, iteration_count){
     mincovski(startingPoints.p1, startingPoints.p2, iteration_count)    
 }
 
-export function drawLevy(iteration1, ctx1 ){
-    let x1               = 330; // Stating x value
-    let y1               = 90; // Stating y value
-    let len            = 170;       // Stating length value
-    let alpha_angle     = 0; // Stating angle value
-   
-    c_curve(x1,y1,len,alpha_angle,iteration1, ctx1);
-    
-    
-    function c_curve ( x, y, length, angle, iteration, ctx  ) {
-    var default_angle = 45;
-    var alpha  = angle;
-    if( iteration > 0 ) {
-        length = (length / Math.sqrt(2));
-        c_curve(x, y, length, (alpha + default_angle), (iteration - 1), ctx ); // Recursive Call
-        x = (x + (length * Math.cos(toRadians(alpha + default_angle))));
-        y = (y + (length * Math.sin(toRadians(alpha + default_angle))));
-        c_curve(x, y, length, (alpha - default_angle), (iteration - 1), ctx ); // Recursive Call
-    } else {
-        ctx.lineCap = 'round';
-        ctx.beginPath();
-        ctx.moveTo( x, y );
-        ctx.lineTo( x + (length * Math.cos(toRadians(alpha))), y + (length * Math.sin(toRadians(alpha))) );
-        ctx.stroke();
-    }
-    function toRadians  ( d ) {
-        return Math.PI*(d/180.0);
+export function drawLevy(iteration1, ctx1){
+
+    const levy = ( x, y, length, alpha, iteration, ctx) => {
+        const toRadians = value  =>  Math.PI*(value / 180.0);
+        
+        if( iteration > 0 ) {
+            length = (length / Math.sqrt(2));
+
+            levy(x, y, length, (alpha + 45), (iteration - 1), ctx);
+
+            x = (x + (length * Math.cos(toRadians(alpha + 45))));
+            y = (y + (length * Math.sin(toRadians(alpha + 45))));
+
+            levy(x, y, length, (alpha - 45), (iteration - 1), ctx);
+        } else {
+            ctx.beginPath();
+            ctx.moveTo( x, y );
+            ctx.lineTo( x + (length * Math.cos(toRadians(alpha))), y + (length * Math.sin(toRadians(alpha))) );
+            ctx.stroke();
         }
     }
+
+    levy(330, 90, 170, 0, iteration1, ctx1);
 }
 
 export function drawKoch(ctx, iteration_count){

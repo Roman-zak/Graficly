@@ -1,10 +1,142 @@
 <template>
-    <div style="grid-template-rows: 100px 12fr; display: grid; height: 100%">
+    <div style="grid-template-rows: 100px 40fr 120px; display: grid; height: 100%">
         <div style="background-color: #EF6C7E;">
+            <div class="slds-grid slds-align_absolute-center" style="height: 100%;">
+                <div class="slds-col slds-size_3-of-12 slds-align_absolute-center">
+                    <div>
+                        <div style="text-align: center;">
+                            <label class="inputtext">Scale Coeficient</label>
+                        </div>
+                        <div class="slds-align_absolute-center">
+                            <input type="text" class="smallinput slds-input">
+                        </div>
+                    </div>
+                </div>
+                <div class="slds-col slds-size_3-of-12 slds-align_absolute-center">
+                    <div>
+                        <div style="text-align: center;">
+                            <label class="inputtext">Clockwise</label>
+                        </div>
+                        <div class="slds-align_absolute-center">
+                            <label class="switch">
+                                <input type="checkbox">
+                                <span class="slider round"></span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <div class="slds-col slds-size_3-of-12 slds-align_absolute-center">
+                    <button class="actionbutton" onclick={handleDownloadImg}>Download</button>
+                </div>
+                <div class="slds-col slds-size_3-of-12 slds-align_absolute-center">
+                    <div class="slds-text-align_center" style="grid-template-rows: 10px 1fr 3fr; display: grid; height: 100%">
+                        <div></div>
+                        <div class="slds-text-align_center label">
+                            <div>Select Apex</div>
+                        </div>
+                        <div>
+                            <select id="fractal" onchange={handleSelect} class="selectapex">
+                                <option value="levy">1</option>
+                                <option value="ice">2</option>
+                                <option value="koch">3</option>
+                                <option value="minkowski">4</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
         <div style="background-color: #F8C0C8;">
+
+
         </div>
         <div style="background-color: #EF6C7E;">
+            <div class="slds-grid slds-size_10-of-10 slds-align_absolute-center" style="height: 100%;">
+                <div class="slds-col slds-size_2-of-10 slds-align_absolute-center slds-p-bottom_large" style="grid-template-columns: 10px 40px 40px; column-gap: 3px; display: grid;">
+                    <div style="text-align: center;" class="slds-p-top_large slds-m-right_x-small">
+                        <label class="inputtext">A:</label>
+                    </div>
+                    <div>
+                        <div style="text-align: center;">
+                            <label class="inputtext">X</label>
+                        </div>
+                        <div>
+                            <input type="text" class="smallinput slds-input">
+                        </div>
+                    </div>
+                    <div>
+                        <div style="text-align: center;">
+                            <label class="inputtext">Y</label>
+                        </div>
+                        <div>
+                            <input type="text" class="smallinput slds-input">
+                        </div>
+                    </div>
+                </div>
+                <div class="slds-col slds-size_2-of-10 slds-align_absolute-center slds-p-bottom_large" style="grid-template-columns: 40px 40px; column-gap: 3px; display: grid;">
+                    <div>
+                        <div style="text-align: center;">
+                            <label class="inputtext">X</label>
+                        </div>
+                        <div>
+                            <input type="text" class="smallinput slds-input">
+                        </div>
+                    </div>
+                    <div>
+                        <div style="text-align: center;">
+                            <label class="inputtext">Y</label>
+                        </div>
+                        <div>
+                            <input type="text" class="smallinput slds-input">
+                        </div>
+                    </div>
+                </div>
+                <div class="slds-col slds-size_2-of-10 slds-align_absolute-center slds-p-bottom_large" style="grid-template-columns: 40px 40px; column-gap: 3px; display: grid;">
+                    <div>
+                        <div style="text-align: center;">
+                            <label class="inputtext">X</label>
+                        </div>
+                        <div>
+                            <input type="text" class="smallinput slds-input">
+                        </div>
+                    </div>
+                    <div>
+                        <div style="text-align: center;">
+                            <label class="inputtext">Y</label>
+                        </div>
+                        <div>
+                            <input type="text" class="smallinput slds-input">
+                        </div>
+                    </div>
+                </div>
+                <div class="slds-col slds-size_2-of-10 slds-align_absolute-center slds-p-bottom_large" style="grid-template-columns: 40px 40px; column-gap: 3px; display: grid;">
+                    <div>
+                        <div style="text-align: center;">
+                            <label class="inputtext">X</label>
+                        </div>
+                        <div>
+                            <input type="text" class="smallinput slds-input">
+                        </div>
+                    </div>
+                    <div>
+                        <div style="text-align: center;">
+                            <label class="inputtext">Y</label>
+                        </div>
+                        <div>
+                            <input type="text" class="smallinput slds-input">
+                        </div>
+                    </div>
+                </div>
+                <div class="slds-col slds-size_2-of-10 slds-align_absolute-center slds-p-bottom_large" style="grid-template-rows: 40px 40px; display: grid;">
+                    <div>
+                        <button class="actionbutton" data-id="image-button" onclick={handleUploadImg}>Upload</button>
+                        <input type="file" data-id="image-input" onchange={handleLoadImg} hidden accept="image/jpeg, image/png, image/jpg">
+                    </div>
+                    <div>
+                        <button class="actionbutton" onclick={handleDownloadImg}>Download</button>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </template>

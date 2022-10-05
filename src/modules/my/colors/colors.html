@@ -1,8 +1,106 @@
 <template>
     <div style="grid-template-rows: 100px 12fr; display: grid; height: 100%">
         <div style="background-color: #EF6C7E;">
+            <div class="slds-grid slds-align_absolute-center" style="height: 100%;">
+                <div class="slds-col slds-size_3-of-12 slds-align_absolute-center" style="grid-template-columns: 40px 40px 40px; column-gap: 3px; display: grid;">
+                    <div>
+                        <div style="text-align: center;">
+                            <label class="inputtext">X</label>
+                        </div>
+                        <div>
+                            <input type="text" class="smallinput slds-input">
+                        </div>
+                    </div>
+                    <div>
+                        <div style="text-align: center;">
+                            <label class="inputtext">Y</label>
+                        </div>
+                        <div>
+                            <input type="text" class="smallinput slds-input">
+                        </div>
+                    </div>
+                    <div>
+                        <div style="text-align: center;">
+                            <label class="inputtext">Z</label>
+                        </div>
+                        <div>
+                            <input type="text" class="smallinput slds-input">
+                        </div>
+                    </div>
+                </div>
+                <div class="slds-col slds-size_3-of-12 slds-align_absolute-center" style="grid-template-columns: 40px 40px 40px; column-gap: 3px; display: grid;">
+                    <div>
+                        <div style="text-align: center;">
+                            <label class="inputtext">R</label>
+                        </div>
+                        <div>
+                            <input type="text" class="smallinput slds-input">
+                        </div>
+                    </div>
+                    <div>
+                        <div style="text-align: center;">
+                            <label class="inputtext">G</label>
+                        </div>
+                        <div>
+                            <input type="text" class="smallinput slds-input">
+                        </div>
+                    </div>
+                    <div>
+                        <div style="text-align: center;">
+                            <label class="inputtext">B</label>
+                        </div>
+                        <div>
+                            <input type="text" class="smallinput slds-input">
+                        </div>
+                    </div>
+                </div>
+                <div class="slds-col slds-size_3-of-12 slds-align_absolute-center">
+                    <div>
+                        <div style="text-align: center;" class="slds-p-bottom_x-small">
+                            <label class="inputtext">Brightness</label>
+                        </div>
+                        <div>
+                            <input type="range" min="-100" max="100" value="0" onchange={handleChangeBrightness} class="slider">
+                        </div>
+                    </div>
+                </div>
+                <div class="slds-col slds-size_3-of-12 slds-align_absolute-center" style="grid-template-rows: 40px 40px; display: grid;">
+                    <div>
+                        <button class="actionbutton" data-id="image-button" onclick={handleUploadImg}>Upload</button>
+                        <input type="file" data-id="image-input" onchange={handleLoadImg} hidden accept="image/jpeg, image/png, image/jpg">
+                    </div>
+                    <div>
+                        <button class="actionbutton" onclick={handleDownloadImg}>Download</button>
+                    </div>
+                </div>
+            </div>
         </div>
         <div style="background-color: #F8C0C8;">
+            <template if:false={isShowInfo}>
+                <div class="slds-p-around_x-large slds-align_absolute-center" style="width: 100%; height: 90%;">
+                    <img onclick={handleShowInformation} data-id="display-image" style="width: 50%; height: 90%; border:1px solid #000000;"></img>
+                    <canvas onclick={handleShowInformation} data-id="display-canvas" width="420" height="340" style="width: 50%; height: 90%; border:1px solid #000000;"></canvas>
+                </div>
+            </template>
+            <template if:true={isShowInfo}>
+                <div class="slds-p-around_x-large" style="width: 100%; height: 90%;">
+                    <div onclick={handleShowInformation} class="slds-p-around_x-large slds-align_absolute-center information">
+                        <div>In mathematics, a fractal is a geometric shape containing detailed structure at 
+                            arbitrarily small scales, usually having a fractal dimension strictly exceeding 
+                            the topological dimension. Many fractals appear similar at various scales, as 
+                            illustrated in successive magnifications of the Mandelbrot set. This exhibition 
+                            of similar patterns at increasingly smaller scales is called self-similarity, also
+                             known as expanding symmetry or unfolding symmetry; if this replication is exactly 
+                             the same at every scale, as in the Menger sponge, the shape is called affine self-similar. 
+                             Fractal geometry lies within the mathematical branch of measure theory.
+                        </div>
+                        <div class="slds-p-top_xx-large">
+                            <img class="slds-col" src="../../../resources/pantera3.png" style="width: auto; height:180px">
+                        </div>
+                    </div>
+                </div>
+            </template>
+
         </div>
     </div>
 </template>
