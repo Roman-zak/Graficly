@@ -60,7 +60,7 @@
                             <label class="inputtext">Brightness</label>
                         </div>
                         <div>
-                            <input type="range" min="-100" max="100" value="0" onchange={handleChangeBrightness} class="slider">
+                            <input type="range" min="0" max="100" value="50" onchange={handleChangeBrightness} class="slider">
                         </div>
                     </div>
                 </div>
@@ -79,7 +79,7 @@
             <template if:false={isShowInfo}>
                 <div class="slds-p-around_x-large slds-align_absolute-center" style="width: 100%; height: 90%;">
                     <img onclick={handleShowInformation} data-id="display-image" style="width: 50%; height: 90%; border:1px solid #000000;"></img>
-                    <canvas onclick={handleShowInformation} data-id="display-canvas" width="420" height="340" style="width: 50%; height: 90%; border:1px solid #000000;"></canvas>
+                    <img onclick={handleShowInformation} data-id="display-image2" style="width: 50%; height: 90%; border:1px solid #000000;"></img>
                 </div>
             </template>
             <template if:true={isShowInfo}>
