@@ -2,13 +2,13 @@
     <div style="grid-template-rows: 100px 12fr; display: grid; height: 100%">
         <div style="background-color: #EF6C7E;">
             <div class="slds-grid slds-align_absolute-center" style="height: 100%;">
-                <div class="slds-col slds-size_3-of-12 slds-align_absolute-center" style="grid-template-columns: 40px 40px 40px; column-gap: 3px; display: grid;">
+                <div class="slds-col slds-size_3-of-12 slds-align_absolute-center" style="grid-template-columns: 100px 100px 100px; column-gap: 3px; display: grid;">
                     <div>
                         <div style="text-align: center;">
                             <label class="inputtext">X</label>
                         </div>
                         <div>
-                            <input type="text" class="smallinput slds-input">
+                            <input style="width: 100%" data-id="inputX" type="text" class="smallinput slds-input">
                         </div>
                     </div>
                     <div>
@@ -16,7 +16,7 @@
                             <label class="inputtext">Y</label>
                         </div>
                         <div>
-                            <input type="text" class="smallinput slds-input">
+                            <input style="width: 100%" data-id="inputY" type="text" class="smallinput slds-input">
                         </div>
                     </div>
                     <div>
@@ -24,25 +24,25 @@
                             <label class="inputtext">Z</label>
                         </div>
                         <div>
-                            <input type="text" class="smallinput slds-input">
+                            <input style="width: 100%" data-id="inputZ" type="text" class="smallinput slds-input">
                         </div>
                     </div>
                 </div>
-                <div class="slds-col slds-size_3-of-12 slds-align_absolute-center" style="grid-template-columns: 40px 40px 40px; column-gap: 3px; display: grid;">
+                <div class="slds-col slds-size_3-of-12 slds-align_absolute-center" style="grid-template-columns: 100px 100px 100px; column-gap: 3px; display: grid;">
                     <div>
                         <div style="text-align: center;">
                             <label class="inputtext">R</label>
                         </div>
                         <div>
-                            <input type="text" class="smallinput slds-input">
+                            <input style="width: 100%" data-id="inputR" type="text" class="smallinput slds-input">
                         </div>
                     </div>
                     <div>
                         <div style="text-align: center;">
                             <label class="inputtext">G</label>
                         </div>
-                        <div>
-                            <input type="text" class="smallinput slds-input">
+                        <div >
+                            <input style="width: 100%" data-id="inputG" type="text" class="smallinput slds-input">
                         </div>
                     </div>
                     <div>
@@ -50,7 +50,7 @@
                             <label class="inputtext">B</label>
                         </div>
                         <div>
-                            <input type="text" class="smallinput slds-input">
+                            <input style="width: 100%" data-id="inputB" type="text" class="smallinput slds-input">
                         </div>
                     </div>
                 </div>
@@ -77,9 +77,9 @@
         </div>
         <div style="background-color: #F8C0C8;">
             <template if:false={isShowInfo}>
-                <div class="slds-p-around_x-large slds-align_absolute-center" style="width: 100%; height: 85%;">
-                    <img onclick={handleShowInformation} data-id="display-image" style="width: 50%; height: 90%; border:1px solid #000000;"></img>
-                    <img onclick={handleShowInformation} data-id="display-image2" style="width: 50%; height: 90%; border:1px solid #000000;"></img>
+                <div class="slds-p-around_x-large slds-align_absolute-center" data-id="display-image-container" style="width: 100%; height: 90%;">
+                    <img ondblclick={handleMouseHover}  data-id="display-image" style="width: 50%; height: 90%; border:1px solid #000000;"></img>
+                    <img ondblclick={handleMouseHover}  data-id="display-image2" style="width: 50%; height: 90%; border:1px solid #000000;"></img>
                 </div>
             </template>
             <template if:true={isShowInfo}>
