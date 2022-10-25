@@ -279,3 +279,46 @@ export function fromHSLtoRGB({h, s, l}){
         b: Math.round(b)
     };
 }
+
+export function rgbToXyz(pixel){
+        let Rs = ( pixel[0] / 255.0 )
+        let Gs = ( pixel[1] / 255.0 )
+        let Bs = ( pixel[2] / 255.0 )
+
+        if ( Rs > 0.04045 ) Rs =  Math.pow(( ( Rs + 0.055 ) / 1.055 ), 2.4)
+        else                   Rs = Rs / 12.92
+        if ( Gs > 0.04045 ) Gs = Math.pow(( ( Gs + 0.055 ) / 1.055 ), 2.4)
+        else                   Gs = Gs / 12.92
+        if ( Bs > 0.04045 ) Bs = Math.pow(( ( Bs + 0.055 ) / 1.055 ), 2.4)
+        else                   Bs = Bs / 12.92
+
+        Rs = Rs * 100
+        Gs = Gs * 100
+        Bs = Bs * 100
+
+        let X = Rs * 0.4124 + Gs * 0.3576 + Bs * 0.1805
+        let Y = Rs * 0.2126 + Gs * 0.7152 + Bs * 0.0722
+        let Z = Rs * 0.0193 + Gs * 0.1192 + Bs * 0.9505
+        return [X, Y, Z];
+    }
+export function xyzToRgb(pixel){
+        var X = pixel[0] / 100.0
+        var Y = pixel[1] / 100.0
+        var Z = pixel[2] / 100.0
+
+        var R = X *  3.2406 + Y * -1.5372 + Z * -0.4986
+        var G = X * -0.9689 + Y *  1.8758 + Z *  0.0415
+        var B = X *  0.0557 + Y * -0.2040 + Z *  1.0570
+
+        if ( R > 0.0031308 ) R = 1.055 * ( Math.pow(R, ( 1 / 2.4 ) )) - 0.055
+        else                     R = 12.92 * R
+        if ( G > 0.0031308 ) G = 1.055 * ( Math.pow(G, ( 1 / 2.4 ) )) - 0.055
+        else                     G = 12.92 * G
+        if ( B > 0.0031308 ) B = 1.055 * ( Math.pow(B, ( 1 / 2.4 ) )) - 0.055
+        else                     B = 12.92 * B
+
+        let sR = parseInt(R * 255,10);
+        let sG = parseInt(G * 255,10);
+        let sB = parseInt(B * 255,10);
+        return [sR, sG, sB];
+    }
