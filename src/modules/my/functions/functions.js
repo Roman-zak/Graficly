@@ -202,3 +202,80 @@ export function drawIce(ctx, iteration_count){
     ice(startingPoints.p3, startingPoints.p4, iteration_count)
     ice(startingPoints.p4, startingPoints.p1, iteration_count)
 }
+
+export function fromRGBtoHSL({r, g, b}){
+    let aR = r/255, aG = g/255, aB = b/255
+
+    let max = r < g ? (b < g ? g : b) : (b < r ? r : b);
+    let min = r < g ? (b < r ? b : r) : (b < g ? b : g);
+    let delta = max - min;
+
+    let h = 0;
+
+    if(max === r && g >= b) h = 60 * ((g - b) / delta) + 0;
+    if(max === r && g < b) h = 60 * ((g - b) / delta) + 360;
+    if(max === g) h = 60 * ((b - r) / delta) + 120;
+    if(max === b) h = 60 * ((r - g) / delta) + 240;
+
+    max = aR < aG ? (aB < aG ? aG : aB) : (aB < aR ? aR : aB);
+    min = aR < aG ? (aB < aR ? aB : aR) : (aB < aG ? aB : aG);
+    delta = max - min;
+
+    let l = (max + min)/2;
+    let s = 0;
+
+    if(delta !== 0) s = delta / ( 1 - Math.abs(2*l - 1))
+
+    return {
+        h : Math.round(h),
+        s : parseFloat(s.toFixed(3)),
+        l : parseFloat(l.toFixed(3))
+    };
+}
+
+export function fromHSLtoRGB({h, s, l}){
+    let c = (1 - Math.abs(2*l - 1)) * s;
+    let x = c * (1 - Math.abs((h / 60) % 2 - 1));
+    let m = l - c / 2;
+
+    let aR, aG, aB;
+
+    if(h >= 0 && h < 60){
+        aR = c;
+        aG = x;
+        aB = 0;
+    }
+    if(h >= 60 && h < 120){
+        aR = x;
+        aG = c;
+        aB = 0;
+    }
+    if(h >= 120 && h < 180){
+        aR = 0;
+        aG = c;
+        aB = x;
+    }
+    if(h >= 180 && h < 240){
+        aR = 0;
+        aG = x;
+        aB = c;
+    }
+    if(h >= 240 && h < 300){
+        aR = x;
+        aG = 0;
+        aB = c;
+    }
+    if(h >= 300 && h < 360){
+        aR = c;
+        aG = 0;
+        aB = x;
+    }
+
+    let r = (aR + m)*255, g = (aG + m)*255, b = (aB + m)*255;
+    
+    return {
+        r: Math.round(r),
+        g: Math.round(g),
+        b: Math.round(b)
+    };
+}
