@@ -86,8 +86,8 @@ export default class Colors extends LightningElement {
         reader.readAsDataURL(event.target.files[0]);
 
         reader.onload = () => {
-            // this.template.querySelector('[data-id="display-image"]').src = reader.result;
-            // this.template.querySelector('[data-id="display-image2"]').src = reader.result;
+            this.template.querySelector('[data-id="display-image"]').src = reader.result;
+            this.template.querySelector('[data-id="display-image2"]').src = reader.result;
             this.firstChange = true;
             this.isFileLoaded = true;
             this.initialBrightness = [];
