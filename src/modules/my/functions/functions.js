@@ -203,6 +203,52 @@ export function drawIce(ctx, iteration_count){
     ice(startingPoints.p4, startingPoints.p1, iteration_count)
 }
 
+export function drawTrapeze(context, a, b, c, d){
+
+    console.log(context.width, context.height);
+
+    context.beginPath()
+    context.moveTo(a.x, a.y)
+    context.lineTo(b.x, b.y)
+    context.lineTo(c.x, c.y)
+    context.lineTo(d.x, d.y)
+    context.lineTo(a.x, a.y)
+    context.stroke()
+}
+
+export function drawCoordinatePlane(context, w, h){
+    context.beginPath()
+    context.moveTo(0, h/2)
+    context.lineTo(w, h/2)
+    context.lineTo(w - 8, h/2 + 3)
+    context.moveTo(w, h/2)
+    context.lineTo(w - 8, h/2 - 3)
+    context.moveTo(w/2, 0)
+    context.lineTo(w/2 - 3, 8)
+    context.moveTo(w/2, 0)
+    context.lineTo(w/2 + 3, 8)
+    context.moveTo(w/2, 0)
+    context.lineTo(w/2, h)
+
+    context.moveTo(w/2 + 10, 10)
+    context.lineTo(w/2 + 12, 15)
+    context.moveTo(w/2 + 14, 10)
+    context.lineTo(w/2 + 12, 15)
+    context.lineTo(w/2 + 12, 20)
+
+    context.moveTo(w - 10, h/2 - 10);
+    context.lineTo(w - 15, h/2 - 20)
+    context.moveTo(w - 15, h/2 - 10);
+    context.lineTo(w - 10, h/2 - 20)
+
+    context.moveTo(w/2 + 5, h/2 - 5);
+    context.lineTo(w/2 + 10, h/2 - 5);
+    context.lineTo(w/2 + 10, h/2 - 15);
+    context.lineTo(w/2 + 5, h/2 - 15);
+    context.lineTo(w/2 + 5, h/2 - 5);
+    context.stroke()
+}
+
 export function fromRGBtoHSL({r, g, b}){
     let aR = r/255, aG = g/255, aB = b/255
 
@@ -300,7 +346,8 @@ export function rgbToXyz(pixel){
         let Y = Rs * 0.2126 + Gs * 0.7152 + Bs * 0.0722
         let Z = Rs * 0.0193 + Gs * 0.1192 + Bs * 0.9505
         return [X, Y, Z];
-    }
+}
+
 export function xyzToRgb(pixel){
         var X = pixel[0] / 100.0
         var Y = pixel[1] / 100.0
@@ -321,4 +368,4 @@ export function xyzToRgb(pixel){
         let sG = parseInt(G * 255,10);
         let sB = parseInt(B * 255,10);
         return [sR, sG, sB];
-    }
+}

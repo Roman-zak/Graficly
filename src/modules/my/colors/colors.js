@@ -140,12 +140,14 @@ export default class Colors extends LightningElement {
             }
         };
     }
+
     handleDownloadImg(event){
         let link = document.createElement('a');
         link.download = 'colorModified.png';
         link.href = this.template.querySelector('[data-id="display-image"]').src;
         link.click();
     }
+
     handleMouseHover(event){
         let img =  event.target;//this.template.querySelector('[data-id="display-image"]');
         let w = img.naturalWidth;
@@ -174,6 +176,7 @@ export default class Colors extends LightningElement {
         let inputZ = this.template.querySelector('[data-id="inputZ"]');
         inputZ.value=xyzPixel[2].toFixed(3);
     }
+    
     getCursorPosition(canvas, event) {
         const rect = canvas.getBoundingClientRect()
         const x = event.clientX - rect.left

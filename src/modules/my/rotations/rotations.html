@@ -26,7 +26,7 @@
                     </div>
                 </div>
                 <div class="slds-col slds-size_3-of-12 slds-align_absolute-center">
-                    <button class="actionbutton" onclick={handleDownloadImg}>Download</button>
+                    <button class="actionbutton" onclick={handleDownloadImg}>Apply</button>
                 </div>
                 <div class="slds-col slds-size_3-of-12 slds-align_absolute-center">
                     <div class="slds-text-align_center" style="grid-template-rows: 10px 1fr 3fr; display: grid; height: 100%">
@@ -36,10 +36,10 @@
                         </div>
                         <div>
                             <select id="fractal" onchange={handleSelect} class="selectapex">
-                                <option value="levy">1</option>
-                                <option value="ice">2</option>
-                                <option value="koch">3</option>
-                                <option value="minkowski">4</option>
+                                <option value="1">1</option>
+                                <option value="2">2</option>
+                                <option value="3">3</option>
+                                <option value="4">4</option>
                             </select>
                         </div>
                     </div>
@@ -47,13 +47,34 @@
             </div>
         </div>
         <div style="background-color: #F8C0C8;">
-
-
+            <template if:false={isShowInfo}>
+                <div class="slds-p-around_x-large slds-align_absolute-center">
+                    <canvas onclick={handleShowInformation} onshow={handle} width="840" height="280" style="width: 100%; height: 90%; border:1px solid #000000;"></canvas>
+                </div>
+            </template>
+            <template if:true={isShowInfo}>
+                <div class="slds-p-around_x-large" style="width: 100%; height: 100%;">
+                    <div onclick={handleShowInformation} class="slds-p-around_x-large slds-align_absolute-center information">
+                        <div>In mathematics, a fractal is a geometric shape containing detailed structure at 
+                            arbitrarily small scales, usually having a fractal dimension strictly exceeding 
+                            the topological dimension. Many fractals appear similar at various scales, as 
+                            illustrated in successive magnifications of the Mandelbrot set. This exhibition 
+                            of similar patterns at increasingly smaller scales is called self-similarity, also
+                             known as expanding symmetry or unfolding symmetry; if this replication is exactly 
+                             the same at every scale, as in the Menger sponge, the shape is called affine self-similar. 
+                             Fractal geometry lies within the mathematical branch of measure theory.
+                        </div>
+                        <div class="slds-p-top_xx-large">
+                            <img class="slds-col" src="../../../resources/pantera3.png" style="width: auto; height:160px">
+                        </div>
+                    </div>
+                </div>
+            </template>
         </div>
         <div style="background-color: #EF6C7E;">
             <div class="slds-grid slds-size_10-of-10 slds-align_absolute-center" style="height: 100%;">
-                <div class="slds-col slds-size_2-of-10 slds-align_absolute-center slds-p-bottom_large" style="grid-template-columns: 10px 40px 40px; column-gap: 3px; display: grid;">
-                    <div style="text-align: center;" class="slds-p-top_large slds-m-right_x-small">
+                <div class="slds-col slds-size_2-of-10 slds-align_absolute-center slds-p-bottom_large" style="grid-template-columns: 20px 60px 60px; column-gap: 3px; display: grid;">
+                    <div style="text-align: center;" class="slds-p-top_large slds-p-right_x-small">
                         <label class="inputtext">A:</label>
                     </div>
                     <div>
@@ -61,7 +82,7 @@
                             <label class="inputtext">X</label>
                         </div>
                         <div>
-                            <input type="text" class="smallinput slds-input">
+                            <input data-id="aX" type="text" class="smallinput slds-input">
                         </div>
                     </div>
                     <div>
@@ -69,17 +90,20 @@
                             <label class="inputtext">Y</label>
                         </div>
                         <div>
-                            <input type="text" class="smallinput slds-input">
+                            <input data-id="aY" type="text" class="smallinput slds-input">
                         </div>
                     </div>
                 </div>
-                <div class="slds-col slds-size_2-of-10 slds-align_absolute-center slds-p-bottom_large" style="grid-template-columns: 40px 40px; column-gap: 3px; display: grid;">
+                <div class="slds-col slds-size_2-of-10 slds-align_absolute-center slds-p-bottom_large" style="grid-template-columns: 20px 60px 60px; column-gap: 3px; display: grid;">
+                    <div style="text-align: center;" class="slds-p-top_large slds-m-right_x-small">
+                        <label class="inputtext">B:</label>
+                    </div>
                     <div>
                         <div style="text-align: center;">
                             <label class="inputtext">X</label>
                         </div>
                         <div>
-                            <input type="text" class="smallinput slds-input">
+                            <input data-id="bX" type="text" class="smallinput slds-input">
                         </div>
                     </div>
                     <div>
@@ -87,17 +111,20 @@
                             <label class="inputtext">Y</label>
                         </div>
                         <div>
-                            <input type="text" class="smallinput slds-input">
+                            <input data-id="bY" type="text" class="smallinput slds-input">
                         </div>
                     </div>
                 </div>
-                <div class="slds-col slds-size_2-of-10 slds-align_absolute-center slds-p-bottom_large" style="grid-template-columns: 40px 40px; column-gap: 3px; display: grid;">
+                <div class="slds-col slds-size_2-of-10 slds-align_absolute-center slds-p-bottom_large" style="grid-template-columns: 20px 60px 60px; column-gap: 3px; display: grid;">
+                    <div style="text-align: center;" class="slds-p-top_large slds-m-right_x-small">
+                        <label class="inputtext">C:</label>
+                    </div>
                     <div>
                         <div style="text-align: center;">
                             <label class="inputtext">X</label>
                         </div>
                         <div>
-                            <input type="text" class="smallinput slds-input">
+                            <input data-id="cX" type="text" class="smallinput slds-input">
                         </div>
                     </div>
                     <div>
@@ -105,17 +132,20 @@
                             <label class="inputtext">Y</label>
                         </div>
                         <div>
-                            <input type="text" class="smallinput slds-input">
+                            <input data-id="cY" type="text" class="smallinput slds-input">
                         </div>
                     </div>
                 </div>
-                <div class="slds-col slds-size_2-of-10 slds-align_absolute-center slds-p-bottom_large" style="grid-template-columns: 40px 40px; column-gap: 3px; display: grid;">
+                <div class="slds-col slds-size_2-of-10 slds-align_absolute-center slds-p-bottom_large" style="grid-template-columns: 20px 60px 60px; column-gap: 3px; display: grid;">
+                    <div style="text-align: center;" class="slds-p-top_large slds-m-right_x-small">
+                        <label class="inputtext">D:</label>
+                    </div>
                     <div>
                         <div style="text-align: center;">
                             <label class="inputtext">X</label>
                         </div>
                         <div>
-                            <input type="text" class="smallinput slds-input">
+                            <input data-id="dX" type="text" class="smallinput slds-input">
                         </div>
                     </div>
                     <div>
@@ -123,14 +153,13 @@
                             <label class="inputtext">Y</label>
                         </div>
                         <div>
-                            <input type="text" class="smallinput slds-input">
+                            <input data-id="dY" type="text" class="smallinput slds-input">
                         </div>
                     </div>
                 </div>
-                <div class="slds-col slds-size_2-of-10 slds-align_absolute-center slds-p-bottom_large" style="grid-template-rows: 40px 40px; display: grid;">
+                <div class="slds-col slds-size_2-of-10 slds-align_absolute-center" style="height: 100%; grid-template-rows: 40px 40px; display: grid;">
                     <div>
-                        <button class="actionbutton" data-id="image-button" onclick={handleUploadImg}>Upload</button>
-                        <input type="file" data-id="image-input" onchange={handleLoadImg} hidden accept="image/jpeg, image/png, image/jpg">
+                        <button class="actionbutton" data-id="image-button" onclick={handleBuildTrapeze}>Build</button>
                     </div>
                     <div>
                         <button class="actionbutton" onclick={handleDownloadImg}>Download</button>
