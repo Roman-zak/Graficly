@@ -1,10 +1,11 @@
 import { LightningElement, track } from 'lwc';
-import {drawTrapeze, drawCoordinatePlane} from './../functions/functions.js';
+import {drawTrapeze, drawCoordinatePlane, isFigureTrapeze} from './../functions/functions.js';
 
 export default class Fractals extends LightningElement {
     @track temp = 0;
     @track isShowInfo = false;
     @track isBuilt = false;
+    @track isValidTrapeze = true;
 
     connectedCallback(){
         setTimeout(() => { this.callDrawPlane()}, 0);
@@ -18,7 +19,7 @@ export default class Fractals extends LightningElement {
 
         context.fillStyle = `rgb(251, 218, 222)`;
         context.fillRect(0,0,w,h);
-        context.strokeStyle = 'rgb(107, 45, 92)';
+        context.strokeStyle = 'rgb(0, 0, 0)';
         context.lineWidth = 1;
 
         drawCoordinatePlane(context, w, h);
@@ -42,6 +43,11 @@ export default class Fractals extends LightningElement {
             y: parseInt(this.template.querySelector('[data-id="dY"]').value, 10)
         }
 
+        if(!isFigureTrapeze(a,b,c,d)){
+            this.isValidTrapeze = false;
+            return;
+        }
+
         let canvas = this.template.querySelector('canvas');
         let w = canvas.width;
         let h = canvas.height
@@ -49,7 +55,7 @@ export default class Fractals extends LightningElement {
         let context = canvas.getContext('2d');
         context.fillStyle = `rgb(251, 218, 222)`;
         context.fillRect(0,0,w,h);
-        context.strokeStyle = 'rgb(107, 45, 92)';
+        context.strokeStyle = 'rgb(0, 0, 0)';
         context.lineWidth = 1;
 
         a.x += w/2;
@@ -62,14 +68,17 @@ export default class Fractals extends LightningElement {
         d.y = h/2 - d.y;
 
         drawCoordinatePlane(context, w, h);
+        context.strokeStyle = 'rgb(107, 45, 92)';
         drawTrapeze(context, a, b, c, d);
 
         this.isBuilt = true;
+        this.isValidTrapeze = true;
     }
 
     handleShowInformation(){
         if(this.isBuilt) return;
         this.isShowInfo = !this.isShowInfo;
+        if(this.isShowInfo === false) setTimeout(() => { this.callDrawPlane()}, 0);
     }
 
     handleDownloadImg(){

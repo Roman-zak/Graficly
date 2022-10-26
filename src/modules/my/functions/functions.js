@@ -203,10 +203,44 @@ export function drawIce(ctx, iteration_count){
     ice(startingPoints.p4, startingPoints.p1, iteration_count)
 }
 
+export function isFigureTrapeze(a, b, c, d){
+    let coefAB, coefCD, coefBC, coefDA;
+    let nodes = [a, b, c, d];
+    let sign = false;
+    let n = nodes.length;
+
+    for(let i = 0; i < n; i++)
+    {
+        let dx1 = nodes.at((i + 2) % n).x - nodes.at((i + 1) % n).x;
+        let dy1 = nodes.at((i + 2) % n).y - nodes.at((i + 1) % n).y;
+        let dx2 = nodes.at(i).x - nodes.at((i + 1) % n).x;
+        let dy2 = nodes.at(i).y - nodes.at((i + 1) % n).y;
+        let productOfVectors = dx1 * dy2 - dy1 * dx2;
+
+        if (i === 0){
+            sign = productOfVectors > 0;
+        }
+        else if (sign !== (productOfVectors > 0)){
+            return false;
+        }
+    }
+
+    coefAB = (b.y - a.y) / (b.x - a.x);
+    coefCD = (d.y - c.y) / (d.x - c.x);
+    coefBC = (c.y - b.y) / (c.x - b.x);
+    coefDA = (a.y - d.y) / (a.x - d.x);
+
+    if(coefAB === -Infinity) coefAB = Infinity;
+    if(coefCD === -Infinity) coefCD = Infinity;
+    if(coefBC === -Infinity) coefBC = Infinity;
+    if(coefDA === -Infinity) coefDA = Infinity;
+
+    if((coefAB === coefCD && coefBC !== coefDA) || (coefBC === coefDA && coefAB !== coefCD)) return true;
+
+    return false;
+}
+
 export function drawTrapeze(context, a, b, c, d){
-
-    console.log(context.width, context.height);
-
     context.beginPath()
     context.moveTo(a.x, a.y)
     context.lineTo(b.x, b.y)
