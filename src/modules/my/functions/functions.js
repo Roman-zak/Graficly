@@ -403,3 +403,105 @@ export function xyzToRgb(pixel){
         let sB = parseInt(B * 255,10);
         return [sR, sG, sB];
 }
+
+export function rotate(trapeze, point, clockwise, totlScale){
+    let clockwiseKoef = 1;
+    if(!clockwise){
+        clockwiseKoef = -1;
+    }
+    let m=point.x;
+    let n=point.y;
+    let angl = Math.PI/48;
+    let operationsN = Math.PI*2/angl;
+    let scale = Math.pow(totlScale, 1.0/operationsN);
+    let trapezeMtrx = [
+        [trapeze.a.x, trapeze.a.y, 1],
+        [trapeze.b.x, trapeze.b.y, 1],
+        [trapeze.c.x, trapeze.c.y, 1],
+        [trapeze.d.x, trapeze.d.y, 1]
+    ];
+    let moveToZeroMtrx = [
+        [1,0,0],
+        [0,1,0],
+        [-1*m, -1*n, 1]
+    ]
+    let moveBackMtrx = [
+        [1,0,0],
+        [0,1,0],
+        [m, n, 1]
+    ]
+    let rotationMtrx = [
+        [Math.cos(angl), clockwiseKoef*Math.sin(angl), 0],
+        [-1*clockwiseKoef*Math.sin(angl),Math.cos(angl), 0],
+        [0,0, 1]
+    ];
+   
+    let scaleMtrx = [
+        [scale, 0, 0],
+        [0, scale, 0],
+        [0, 0, 1]
+    ]
+    // let rotationMtrx = [
+    //     [Math.cos(angl), clockwiseKoef*Math.sin(angl), 0],
+    //     [-1*clockwiseKoef*Math.sin(angl),Math.cos(angl), 0],
+    //     [-1*m*Math.cos(angl)+n*clockwiseKoef*Math.sin(angl)+m,-1*clockwiseKoef*m*Math.sin(angl)-n*Math.cos(angl)+n, 1]
+    // ];
+    let newTrapeze = multiplyMatrices(trapezeMtrx,moveToZeroMtrx);
+    newTrapeze = multiplyMatrices(newTrapeze,rotationMtrx);
+    newTrapeze = multiplyMatrices(newTrapeze,moveBackMtrx);
+    newTrapeze = multiplyMatrices(newTrapeze,moveToZeroMtrx);
+    newTrapeze = multiplyMatrices(newTrapeze,scaleMtrx);
+    newTrapeze = multiplyMatrices(newTrapeze,moveBackMtrx);
+
+    trapeze.a.x = newTrapeze[0][0];
+    trapeze.a.y = newTrapeze[0][1];
+    trapeze.b.x = newTrapeze[1][0];
+    trapeze.b.y = newTrapeze[1][1];
+    trapeze.c.x = newTrapeze[2][0];
+    trapeze.c.y = newTrapeze[2][1];
+    trapeze.d.x = newTrapeze[3][0];
+    trapeze.d.y = newTrapeze[3][1];
+    console.log(trapeze);
+   // return ;
+}
+function multiplyMatrices (a, b){
+    if (!Array.isArray(a) || !Array.isArray(b) || !a.length || !b.length) {
+       throw new Error('arguments should be in 2-dimensional array format');
+    }
+    let x = a.length,
+    z = a[0].length,
+    y = b[0].length;
+    if (b.length !== z) {
+       // XxZ & ZxY => XxY
+       throw new Error('number of columns in the first matrix should be the same as the number of rows in the second');
+    }
+    let productRow = Array.apply(null, new Array(y)).map(Number.prototype.valueOf, 0);
+    let product = new Array(x);
+    for (let p = 0; p < x; p++) {
+       product[p] = productRow.slice();
+    }
+    for (let i = 0; i < x; i++) {
+       for (let j = 0; j < y; j++) {
+          for (let k = 0; k < z; k++) {
+             product[i][j] += a[i][k] * b[k][j];
+          }
+       }
+    }
+    return product;
+ }
+ export function updateOutputTrapeze(canvas, trapeze, outputTrapeze){
+    
+    let w = canvas.width;
+    let h = canvas.height
+    outputTrapeze.a.x = Math.round(trapeze.a.x - w/2);
+    outputTrapeze.a.y =  Math.round(h/2 - trapeze.a.y);
+
+    outputTrapeze.b.x =  Math.round(trapeze.b.x - w/2);
+    outputTrapeze.b.y =  Math.round(h/2 - trapeze.b.y);
+
+    outputTrapeze.c.x =  Math.round(trapeze.c.x - w/2);
+    outputTrapeze.c.y =  Math.round(h/2 - trapeze.c.y);
+
+    outputTrapeze.d.x =  Math.round(trapeze.d.x - w/2);
+    outputTrapeze.d.y =  Math.round(h/2 - trapeze.d.y);
+}
