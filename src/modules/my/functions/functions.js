@@ -203,6 +203,17 @@ export function drawIce(ctx, iteration_count){
     ice(startingPoints.p4, startingPoints.p1, iteration_count)
 }
 
+export function setUnitSegment(a, b, c, d, unitSegmentCoefficient){
+    a.x *= unitSegmentCoefficient;
+    b.x *= unitSegmentCoefficient;
+    c.x *= unitSegmentCoefficient;
+    d.x *= unitSegmentCoefficient;
+    a.y *= unitSegmentCoefficient;
+    b.y *= unitSegmentCoefficient;
+    c.y *= unitSegmentCoefficient;
+    d.y *= unitSegmentCoefficient;
+}
+
 export function isFigureTrapeze(a, b, c, d){
     let coefAB, coefCD, coefBC, coefDA;
     let nodes = [a, b, c, d];
@@ -230,12 +241,8 @@ export function isFigureTrapeze(a, b, c, d){
     coefBC = (c.y - b.y) / (c.x - b.x);
     coefDA = (a.y - d.y) / (a.x - d.x);
 
-    if(coefAB === -Infinity) coefAB = Infinity;
-    if(coefCD === -Infinity) coefCD = Infinity;
-    if(coefBC === -Infinity) coefBC = Infinity;
-    if(coefDA === -Infinity) coefDA = Infinity;
-
-    if((coefAB === coefCD && coefBC !== coefDA) || (coefBC === coefDA && coefAB !== coefCD)) return true;
+    if((coefAB < coefCD + 0.07 && coefAB > coefCD - 0.07) && (coefBC !== coefDA)) return true;
+    if((coefBC < coefDA + 0.07 && coefBC > coefDA - 0.07) && (coefAB !== coefCD)) return true;
 
     return false;
 }
@@ -250,7 +257,7 @@ export function drawTrapeze(context, a, b, c, d){
     context.stroke()
 }
 
-export function drawCoordinatePlane(context, w, h){
+export function drawCoordinatePlane(context, w, h, unitSegmentCoefficient){
     context.beginPath()
     context.moveTo(0, h/2)
     context.lineTo(w, h/2)
@@ -280,6 +287,37 @@ export function drawCoordinatePlane(context, w, h){
     context.lineTo(w/2 + 10, h/2 - 15);
     context.lineTo(w/2 + 5, h/2 - 15);
     context.lineTo(w/2 + 5, h/2 - 5);
+
+    let currentWidth = w/2;
+    while(currentWidth > 0){
+        context.moveTo(currentWidth, h/2 + 4)
+        context.lineTo(currentWidth, h/2 - 4);
+
+        currentWidth -= (10 * unitSegmentCoefficient);
+    }
+    currentWidth = w/2;
+    while(currentWidth < w){
+        context.moveTo(currentWidth, h/2 + 4)
+        context.lineTo(currentWidth, h/2 - 4);
+
+        currentWidth += (10 * unitSegmentCoefficient);
+    }
+
+    let currentHeight = h/2;
+    while(currentHeight > 0){
+        context.moveTo(w/2 - 4, currentHeight)
+        context.lineTo(w/2 + 4, currentHeight);
+
+        currentHeight -= (10 * unitSegmentCoefficient);
+    }
+    currentHeight = h/2;
+    while(currentHeight < h){
+        context.moveTo(w/2 - 4, currentHeight)
+        context.lineTo(w/2 + 4, currentHeight);
+
+        currentHeight += (10 * unitSegmentCoefficient);
+    }
+
     context.stroke()
 }
 
@@ -441,11 +479,7 @@ export function rotate(trapeze, point, clockwise, totlScale){
         [0, scale, 0],
         [0, 0, 1]
     ]
-    // let rotationMtrx = [
-    //     [Math.cos(angl), clockwiseKoef*Math.sin(angl), 0],
-    //     [-1*clockwiseKoef*Math.sin(angl),Math.cos(angl), 0],
-    //     [-1*m*Math.cos(angl)+n*clockwiseKoef*Math.sin(angl)+m,-1*clockwiseKoef*m*Math.sin(angl)-n*Math.cos(angl)+n, 1]
-    // ];
+
     let newTrapeze = multiplyMatrices(trapezeMtrx,moveToZeroMtrx);
     newTrapeze = multiplyMatrices(newTrapeze,rotationMtrx);
     newTrapeze = multiplyMatrices(newTrapeze,moveBackMtrx);
@@ -461,8 +495,6 @@ export function rotate(trapeze, point, clockwise, totlScale){
     trapeze.c.y = newTrapeze[2][1];
     trapeze.d.x = newTrapeze[3][0];
     trapeze.d.y = newTrapeze[3][1];
-    console.log(trapeze);
-   // return ;
 }
 function multiplyMatrices (a, b){
     if (!Array.isArray(a) || !Array.isArray(b) || !a.length || !b.length) {
@@ -489,19 +521,20 @@ function multiplyMatrices (a, b){
     }
     return product;
  }
- export function updateOutputTrapeze(canvas, trapeze, outputTrapeze){
-    
+ export function updateOutputTrapeze(canvas, trapeze, outputTrapeze, unitSegmentCoefficient){
     let w = canvas.width;
     let h = canvas.height
-    outputTrapeze.a.x = Math.round(trapeze.a.x - w/2);
-    outputTrapeze.a.y =  Math.round(h/2 - trapeze.a.y);
+    unitSegmentCoefficient = parseInt(unitSegmentCoefficient, 10);
 
-    outputTrapeze.b.x =  Math.round(trapeze.b.x - w/2);
-    outputTrapeze.b.y =  Math.round(h/2 - trapeze.b.y);
+    outputTrapeze.a.x = Math.round((trapeze.a.x - w/2)/unitSegmentCoefficient);
+    outputTrapeze.a.y =  Math.round((h/2 - trapeze.a.y)/unitSegmentCoefficient);
 
-    outputTrapeze.c.x =  Math.round(trapeze.c.x - w/2);
-    outputTrapeze.c.y =  Math.round(h/2 - trapeze.c.y);
+    outputTrapeze.b.x =  Math.round((trapeze.b.x - w/2)/unitSegmentCoefficient);
+    outputTrapeze.b.y =  Math.round((h/2 - trapeze.b.y)/unitSegmentCoefficient);
 
-    outputTrapeze.d.x =  Math.round(trapeze.d.x - w/2);
-    outputTrapeze.d.y =  Math.round(h/2 - trapeze.d.y);
+    outputTrapeze.c.x =  Math.round((trapeze.c.x - w/2)/unitSegmentCoefficient);
+    outputTrapeze.c.y =  Math.round((h/2 - trapeze.c.y)/unitSegmentCoefficient);
+
+    outputTrapeze.d.x =  Math.round((trapeze.d.x - w/2)/unitSegmentCoefficient);
+    outputTrapeze.d.y =  Math.round((h/2 - trapeze.d.y)/unitSegmentCoefficient);
 }

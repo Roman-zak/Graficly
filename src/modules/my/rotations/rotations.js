@@ -1,13 +1,14 @@
 import { LightningElement, track } from 'lwc';
-import {drawTrapeze, drawCoordinatePlane, isFigureTrapeze, rotate, updateOutputTrapeze} from './../functions/functions.js';
+import {drawTrapeze, drawCoordinatePlane, setUnitSegment,  isFigureTrapeze, rotate, updateOutputTrapeze} from './../functions/functions.js';
 
 export default class Fractals extends LightningElement {
-    @track temp = 0;
+    @track unitSegmentCoefficient = 1;
     @track isShowInfo = false;
     @track isBuilt = false;
     @track isValidTrapeze = true;
     @track isRunning = false;
     @track myInterval;
+    @track originTrapeze = {};
     @track trapeze = {
          a : {
             x: 0,
@@ -44,15 +45,13 @@ export default class Fractals extends LightningElement {
            y: 0
        }
    }; 
-    get getTrapeze(){
-        return this.trapeze;
-        // let canvas = this.template.querySelector('canvas');
-        // let w = canvas.width;
-        // let h = canvas.height
-        // return realTrapezeToCoordinates(this.trapeze,h,w);
-    }
+
     get getOutputTrapeze(){
         return this.outputTrapeze;
+    }
+
+    get getUnitSegment(){
+        return this.unitSegmentCoefficient * 10;
     }
 
     connectedCallback(){
@@ -70,27 +69,45 @@ export default class Fractals extends LightningElement {
         context.strokeStyle = 'rgb(0, 0, 0)';
         context.lineWidth = 1;
 
-        drawCoordinatePlane(context, w, h);
+        drawCoordinatePlane(context, w, h, this.unitSegmentCoefficient);
     }
 
-    handleBuildTrapeze(){
+    handleBuildOriginTrapeze(){
+        this.outputTrapeze = {...this.originTrapeze};
+        this.handleBuildTrapeze(true);
+    }
 
-        let a = {
-            x: parseInt(this.template.querySelector('[data-id="aX"]').value, 10),
-            y: parseInt(this.template.querySelector('[data-id="aY"]').value, 10)
+    handleBuildTrapeze(rebuild){
+        let a, b, c, d; 
+        if(rebuild === true){
+            a = {...this.outputTrapeze.a};
+            b = {...this.outputTrapeze.b};
+            c = {...this.outputTrapeze.c};
+            d = {...this.outputTrapeze.d};
         }
-        let b = {
-            x: parseInt(this.template.querySelector('[data-id="bX"]').value, 10),
-            y: parseInt(this.template.querySelector('[data-id="bY"]').value, 10)
+        else{
+            a = {
+                x: parseInt(this.template.querySelector('[data-id="aX"]').value, 10),
+                y: parseInt(this.template.querySelector('[data-id="aY"]').value, 10)
+            }
+            b = {
+                x: parseInt(this.template.querySelector('[data-id="bX"]').value, 10),
+                y: parseInt(this.template.querySelector('[data-id="bY"]').value, 10)
+            }
+            c = {
+                x: parseInt(this.template.querySelector('[data-id="cX"]').value, 10),
+                y: parseInt(this.template.querySelector('[data-id="cY"]').value, 10)
+            }
+            d = {
+                x: parseInt(this.template.querySelector('[data-id="dX"]').value, 10),
+                y: parseInt(this.template.querySelector('[data-id="dY"]').value, 10)
+            }
         }
-        let c = {
-            x: parseInt(this.template.querySelector('[data-id="cX"]').value, 10),
-            y: parseInt(this.template.querySelector('[data-id="cY"]').value, 10)
-        }
-        let d = {
-            x: parseInt(this.template.querySelector('[data-id="dX"]').value, 10),
-            y: parseInt(this.template.querySelector('[data-id="dY"]').value, 10)
-        }
+
+        this.originTrapeze = {a: {...a}, b: {...b}, c: {...c}, d: {...d}};
+        this.outputTrapeze = {a: {...a}, b: {...b}, c: {...c}, d: {...d}};
+
+        setUnitSegment(a, b, c, d, this.unitSegmentCoefficient)
 
         if(!isFigureTrapeze(a,b,c,d)){
             this.isValidTrapeze = false;
@@ -116,14 +133,11 @@ export default class Fractals extends LightningElement {
         d.x += w/2;
         d.y = h/2 - d.y;
 
-        drawCoordinatePlane(context, w, h);
+        drawCoordinatePlane(context, w, h, this.unitSegmentCoefficient);
         context.strokeStyle = 'rgb(107, 45, 92)';
         drawTrapeze(context, a, b, c, d);
-        this.trapeze.a=a;
-        this.trapeze.b=b;
-        this.trapeze.c=c;
-        this.trapeze.d=d;
 
+        this.trapeze = {a: {...a}, b: {...b}, c: {...c}, d: {...d}};
         this.isBuilt = true;
         this.isValidTrapeze = true;
     }
@@ -141,6 +155,18 @@ export default class Fractals extends LightningElement {
         link.click();
     }
 
+    handleChangeUnitSegment(event){
+        if(event.target.value < 1){
+            this.unitSegmentCoefficient = 1;
+            return;
+        }
+        if(event.target.value > 5){
+            this.unitSegmentCoefficient = 5;
+            return;
+        }
+        this.unitSegmentCoefficient = event.target.value;
+    }
+
     handleRotate(){
         if(!this.isRunning){
             this.isRunning = true;
@@ -148,9 +174,8 @@ export default class Fractals extends LightningElement {
             this.isRunning = false;
             clearInterval(this.myInterval);
         }
-        if(this.isRunning){
 
-        
+        if(this.isRunning){
             let canvas = this.template.querySelector('canvas');
             let w = canvas.width;
             let h = canvas.height
@@ -159,6 +184,7 @@ export default class Fractals extends LightningElement {
             let scale =  this.template.querySelector('[data-id="scale"]').value;
             let apexName = this.template.querySelector('[data-id="apex"]').value;
             let apex;
+
             switch (apexName) {
                 case 'A':
                     apex = this.trapeze.a;
@@ -178,28 +204,23 @@ export default class Fractals extends LightningElement {
             }
             let rotateIterations =0;
             let currentScale = scale;
-        //while( this.isRunning)
-        this.myInterval = setInterval(()=>{
-            console.log(Math.floor(rotateIterations/96)%2);
-            console.log(currentScale);
-            if(Math.floor(rotateIterations/96)%2===1){
-                currentScale = 1/scale;
-            } else{
-                currentScale = scale;
-            }
-            rotate(this.trapeze,apex, clockwise, currentScale);
-            updateOutputTrapeze(canvas, this.trapeze, this.outputTrapeze);
-            context.fillStyle = `rgb(251, 218, 222)`;
-            context.fillRect(0,0,w,h);
-            context.strokeStyle = 'rgb(0, 0, 0)';
-            drawCoordinatePlane(context, w, h);
-            context.strokeStyle = 'rgb(107, 45, 92)';
-            drawTrapeze(context, this.trapeze.a, this.trapeze.b, this.trapeze.c, this.trapeze.d);
-            rotateIterations++;
-        },50);
-    }
-    
 
+            this.myInterval = setInterval(()=>{
+                if(Math.floor(rotateIterations/96)%2===1){
+                    currentScale = 1/scale;
+                } else{
+                    currentScale = scale;
+                }
+                rotate(this.trapeze,apex, clockwise, currentScale);
+                updateOutputTrapeze(canvas, this.trapeze, this.outputTrapeze, this.unitSegmentCoefficient);
+                context.fillStyle = `rgb(251, 218, 222)`;
+                context.fillRect(0,0,w,h);
+                context.strokeStyle = 'rgb(0, 0, 0)';
+                drawCoordinatePlane(context, w, h);
+                context.strokeStyle = 'rgb(107, 45, 92)';
+                drawTrapeze(context, this.trapeze.a, this.trapeze.b, this.trapeze.c, this.trapeze.d, this.unitSegmentCoefficient);
+                rotateIterations++;
+            },50);
+        }
     }
-
 }

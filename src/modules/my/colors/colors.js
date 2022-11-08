@@ -1,6 +1,7 @@
 import { LightningElement, track } from 'lwc';
 import {fromRGBtoHSL, fromHSLtoRGB, xyzToRgb, rgbToXyz} from './../functions/functions.js';
 
+
 export default class Colors extends LightningElement {
     @track isShowInfo = false;
     @track initialBrightness = [];

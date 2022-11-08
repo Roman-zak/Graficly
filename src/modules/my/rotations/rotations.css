@@ -106,6 +106,12 @@
     -ms-transform: translateX(26px);
     transform: translateX(26px);
   }
+
+  input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
   
   /* Rounded sliders */
   .slider.round {
