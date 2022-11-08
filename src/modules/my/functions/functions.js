@@ -203,123 +203,7 @@ export function drawIce(ctx, iteration_count){
     ice(startingPoints.p4, startingPoints.p1, iteration_count)
 }
 
-export function setUnitSegment(a, b, c, d, unitSegmentCoefficient){
-    a.x *= unitSegmentCoefficient;
-    b.x *= unitSegmentCoefficient;
-    c.x *= unitSegmentCoefficient;
-    d.x *= unitSegmentCoefficient;
-    a.y *= unitSegmentCoefficient;
-    b.y *= unitSegmentCoefficient;
-    c.y *= unitSegmentCoefficient;
-    d.y *= unitSegmentCoefficient;
-}
 
-export function isFigureTrapeze(a, b, c, d){
-    let coefAB, coefCD, coefBC, coefDA;
-    let nodes = [a, b, c, d];
-    let sign = false;
-    let n = nodes.length;
-
-    for(let i = 0; i < n; i++)
-    {
-        let dx1 = nodes.at((i + 2) % n).x - nodes.at((i + 1) % n).x;
-        let dy1 = nodes.at((i + 2) % n).y - nodes.at((i + 1) % n).y;
-        let dx2 = nodes.at(i).x - nodes.at((i + 1) % n).x;
-        let dy2 = nodes.at(i).y - nodes.at((i + 1) % n).y;
-        let productOfVectors = dx1 * dy2 - dy1 * dx2;
-
-        if (i === 0){
-            sign = productOfVectors > 0;
-        }
-        else if (sign !== (productOfVectors > 0)){
-            return false;
-        }
-    }
-
-    coefAB = (b.y - a.y) / (b.x - a.x);
-    coefCD = (d.y - c.y) / (d.x - c.x);
-    coefBC = (c.y - b.y) / (c.x - b.x);
-    coefDA = (a.y - d.y) / (a.x - d.x);
-
-    if((coefAB < coefCD + 0.07 && coefAB > coefCD - 0.07) && (coefBC !== coefDA)) return true;
-    if((coefBC < coefDA + 0.07 && coefBC > coefDA - 0.07) && (coefAB !== coefCD)) return true;
-
-    return false;
-}
-
-export function drawTrapeze(context, a, b, c, d){
-    context.beginPath()
-    context.moveTo(a.x, a.y)
-    context.lineTo(b.x, b.y)
-    context.lineTo(c.x, c.y)
-    context.lineTo(d.x, d.y)
-    context.lineTo(a.x, a.y)
-    context.stroke()
-}
-
-export function drawCoordinatePlane(context, w, h, unitSegmentCoefficient){
-    context.beginPath()
-    context.moveTo(0, h/2)
-    context.lineTo(w, h/2)
-    context.lineTo(w - 8, h/2 + 3)
-    context.moveTo(w, h/2)
-    context.lineTo(w - 8, h/2 - 3)
-    context.moveTo(w/2, 0)
-    context.lineTo(w/2 - 3, 8)
-    context.moveTo(w/2, 0)
-    context.lineTo(w/2 + 3, 8)
-    context.moveTo(w/2, 0)
-    context.lineTo(w/2, h)
-
-    context.moveTo(w/2 + 10, 10)
-    context.lineTo(w/2 + 12, 15)
-    context.moveTo(w/2 + 14, 10)
-    context.lineTo(w/2 + 12, 15)
-    context.lineTo(w/2 + 12, 20)
-
-    context.moveTo(w - 10, h/2 - 10);
-    context.lineTo(w - 15, h/2 - 20)
-    context.moveTo(w - 15, h/2 - 10);
-    context.lineTo(w - 10, h/2 - 20)
-
-    context.moveTo(w/2 + 5, h/2 - 5);
-    context.lineTo(w/2 + 10, h/2 - 5);
-    context.lineTo(w/2 + 10, h/2 - 15);
-    context.lineTo(w/2 + 5, h/2 - 15);
-    context.lineTo(w/2 + 5, h/2 - 5);
-
-    let currentWidth = w/2;
-    while(currentWidth > 0){
-        context.moveTo(currentWidth, h/2 + 4)
-        context.lineTo(currentWidth, h/2 - 4);
-
-        currentWidth -= (10 * unitSegmentCoefficient);
-    }
-    currentWidth = w/2;
-    while(currentWidth < w){
-        context.moveTo(currentWidth, h/2 + 4)
-        context.lineTo(currentWidth, h/2 - 4);
-
-        currentWidth += (10 * unitSegmentCoefficient);
-    }
-
-    let currentHeight = h/2;
-    while(currentHeight > 0){
-        context.moveTo(w/2 - 4, currentHeight)
-        context.lineTo(w/2 + 4, currentHeight);
-
-        currentHeight -= (10 * unitSegmentCoefficient);
-    }
-    currentHeight = h/2;
-    while(currentHeight < h){
-        context.moveTo(w/2 - 4, currentHeight)
-        context.lineTo(w/2 + 4, currentHeight);
-
-        currentHeight += (10 * unitSegmentCoefficient);
-    }
-
-    context.stroke()
-}
 
 export function fromRGBtoHSL({r, g, b}){
     let aR = r/255, aG = g/255, aB = b/255
@@ -458,34 +342,40 @@ export function rotate(trapeze, point, clockwise, totlScale){
         [trapeze.c.x, trapeze.c.y, 1],
         [trapeze.d.x, trapeze.d.y, 1]
     ];
-    let moveToZeroMtrx = [
-        [1,0,0],
-        [0,1,0],
-        [-1*m, -1*n, 1]
+    let transformMtrx = [
+        [scale*Math.cos(angl), scale*clockwiseKoef*Math.sin(angl), 0],
+        [-1*clockwiseKoef*scale*Math.sin(angl),scale*Math.cos(angl), 0],
+        [scale*(n*clockwiseKoef*Math.sin(angl)-m*Math.cos(angl))+m,  scale*(-1*m*clockwiseKoef*Math.sin(angl)-n*Math.cos(angl))+n, 1]
     ]
-    let moveBackMtrx = [
-        [1,0,0],
-        [0,1,0],
-        [m, n, 1]
-    ]
-    let rotationMtrx = [
-        [Math.cos(angl), clockwiseKoef*Math.sin(angl), 0],
-        [-1*clockwiseKoef*Math.sin(angl),Math.cos(angl), 0],
-        [0,0, 1]
-    ];
+    let newTrapeze = multiplyMatrices(trapezeMtrx,transformMtrx);
+    //покрокове множення матриць
+    //-----------------------------------------------------------
+    // let moveToZeroMtrx = [
+    //     [1,0,0],
+    //     [0,1,0],
+    //     [-1*m, -1*n, 1]
+    // ]
+    // let moveBackMtrx = [
+    //     [1,0,0],
+    //     [0,1,0],
+    //     [m, n, 1]
+    // ]
+    // let rotationMtrx = [
+    //     [Math.cos(angl), clockwiseKoef*Math.sin(angl), 0],
+    //     [-1*clockwiseKoef*Math.sin(angl),Math.cos(angl), 0],
+    //     [0,0, 1]
+    // ];
    
-    let scaleMtrx = [
-        [scale, 0, 0],
-        [0, scale, 0],
-        [0, 0, 1]
-    ]
-
-    let newTrapeze = multiplyMatrices(trapezeMtrx,moveToZeroMtrx);
-    newTrapeze = multiplyMatrices(newTrapeze,rotationMtrx);
-    newTrapeze = multiplyMatrices(newTrapeze,moveBackMtrx);
-    newTrapeze = multiplyMatrices(newTrapeze,moveToZeroMtrx);
-    newTrapeze = multiplyMatrices(newTrapeze,scaleMtrx);
-    newTrapeze = multiplyMatrices(newTrapeze,moveBackMtrx);
+    // let scaleMtrx = [
+    //     [scale, 0, 0],
+    //     [0, scale, 0],
+    //     [0, 0, 1]
+    // ]
+    // let newTrapeze = multiplyMatrices(trapezeMtrx,moveToZeroMtrx);
+    // newTrapeze = multiplyMatrices(newTrapeze,rotationMtrx);
+    // newTrapeze = multiplyMatrices(newTrapeze,scaleMtrx);
+    // newTrapeze = multiplyMatrices(newTrapeze,moveBackMtrx);
+    //-----------------------------------------------------------
 
     trapeze.a.x = newTrapeze[0][0];
     trapeze.a.y = newTrapeze[0][1];
@@ -537,4 +427,134 @@ function multiplyMatrices (a, b){
 
     outputTrapeze.d.x =  Math.round((trapeze.d.x - w/2)/unitSegmentCoefficient);
     outputTrapeze.d.y =  Math.round((h/2 - trapeze.d.y)/unitSegmentCoefficient);
+}
+
+export function setUnitSegment(a, b, c, d, unitSegmentCoefficient){
+    let trapezeMtrx = [
+        [a.x, a.y, 1],
+        [b.x, b.y, 1],
+        [c.x, c.y, 1],
+        [d.x, d.y, 1]
+    ];
+    let scaleMtrx = [
+        [unitSegmentCoefficient, 0, 0],
+        [0, unitSegmentCoefficient, 0],
+        [0, 0, 1]
+    ]
+    trapezeMtrx=multiplyMatrices(trapezeMtrx, scaleMtrx);
+    a.x=trapezeMtrx[0][0];
+    a.y=trapezeMtrx[0][1];
+    b.x=trapezeMtrx[1][0];
+    b.y=trapezeMtrx[1][1];
+    c.x=trapezeMtrx[2][0];
+    c.y=trapezeMtrx[2][1];
+    d.x=trapezeMtrx[3][0];
+    d.y=trapezeMtrx[3][1];
+}
+
+export function isFigureTrapeze(a, b, c, d){
+    let coefAB, coefCD, coefBC, coefDA;
+    let nodes = [a, b, c, d];
+    let sign = false;
+    let n = nodes.length;
+
+    for(let i = 0; i < n; i++)
+    {
+        let dx1 = nodes.at((i + 2) % n).x - nodes.at((i + 1) % n).x;
+        let dy1 = nodes.at((i + 2) % n).y - nodes.at((i + 1) % n).y;
+        let dx2 = nodes.at(i).x - nodes.at((i + 1) % n).x;
+        let dy2 = nodes.at(i).y - nodes.at((i + 1) % n).y;
+        let productOfVectors = dx1 * dy2 - dy1 * dx2;
+
+        if (i === 0){
+            sign = productOfVectors > 0;
+        }
+        else if (sign !== (productOfVectors > 0)){
+            return false;
+        }
+    }
+
+    coefAB = (b.y - a.y) / (b.x - a.x);
+    coefCD = (d.y - c.y) / (d.x - c.x);
+    coefBC = (c.y - b.y) / (c.x - b.x);
+    coefDA = (a.y - d.y) / (a.x - d.x);
+
+    if((coefAB < coefCD + 0.07 && coefAB > coefCD - 0.07) && (coefBC !== coefDA)) return true;
+    if((coefBC < coefDA + 0.07 && coefBC > coefDA - 0.07) && (coefAB !== coefCD)) return true;
+
+    return false;
+}
+
+export function drawTrapeze(context, a, b, c, d){
+    context.beginPath()
+    context.moveTo(a.x, a.y)
+    context.lineTo(b.x, b.y)
+    context.lineTo(c.x, c.y)
+    context.lineTo(d.x, d.y)
+    context.lineTo(a.x, a.y)
+    context.stroke()
+}
+
+export function drawCoordinatePlane(context, w, h, unitSegmentCoefficient){
+    context.beginPath()
+    context.moveTo(0, h/2)
+    context.lineTo(w, h/2)
+    context.lineTo(w - 8, h/2 + 3)
+    context.moveTo(w, h/2)
+    context.lineTo(w - 8, h/2 - 3)
+    context.moveTo(w/2, 0)
+    context.lineTo(w/2 - 3, 8)
+    context.moveTo(w/2, 0)
+    context.lineTo(w/2 + 3, 8)
+    context.moveTo(w/2, 0)
+    context.lineTo(w/2, h)
+
+    context.moveTo(w/2 + 10, 10)
+    context.lineTo(w/2 + 12, 15)
+    context.moveTo(w/2 + 14, 10)
+    context.lineTo(w/2 + 12, 15)
+    context.lineTo(w/2 + 12, 20)
+
+    context.moveTo(w - 10, h/2 - 10);
+    context.lineTo(w - 15, h/2 - 20)
+    context.moveTo(w - 15, h/2 - 10);
+    context.lineTo(w - 10, h/2 - 20)
+
+    context.moveTo(w/2 + 5, h/2 - 5);
+    context.lineTo(w/2 + 10, h/2 - 5);
+    context.lineTo(w/2 + 10, h/2 - 15);
+    context.lineTo(w/2 + 5, h/2 - 15);
+    context.lineTo(w/2 + 5, h/2 - 5);
+
+    let currentWidth = w/2;
+    while(currentWidth > 0){
+        context.moveTo(currentWidth, h/2 + 4)
+        context.lineTo(currentWidth, h/2 - 4);
+
+        currentWidth -= (10 * unitSegmentCoefficient);
+    }
+    currentWidth = w/2;
+    while(currentWidth < w){
+        context.moveTo(currentWidth, h/2 + 4)
+        context.lineTo(currentWidth, h/2 - 4);
+
+        currentWidth += (10 * unitSegmentCoefficient);
+    }
+
+    let currentHeight = h/2;
+    while(currentHeight > 0){
+        context.moveTo(w/2 - 4, currentHeight)
+        context.lineTo(w/2 + 4, currentHeight);
+
+        currentHeight -= (10 * unitSegmentCoefficient);
+    }
+    currentHeight = h/2;
+    while(currentHeight < h){
+        context.moveTo(w/2 - 4, currentHeight)
+        context.lineTo(w/2 + 4, currentHeight);
+
+        currentHeight += (10 * unitSegmentCoefficient);
+    }
+
+    context.stroke()
 }
