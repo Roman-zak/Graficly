@@ -50,10 +50,6 @@ export default class Fractals extends LightningElement {
         return this.outputTrapeze;
     }
 
-    get getUnitSegment(){
-        return this.unitSegmentCoefficient * 10;
-    }
-
     connectedCallback(){
         setTimeout(() => { this.callDrawPlane()}, 0);
     }
@@ -216,7 +212,7 @@ export default class Fractals extends LightningElement {
                 context.fillStyle = `rgb(251, 218, 222)`;
                 context.fillRect(0,0,w,h);
                 context.strokeStyle = 'rgb(0, 0, 0)';
-                drawCoordinatePlane(context, w, h);
+                drawCoordinatePlane(context, w, h, this.unitSegmentCoefficient);
                 context.strokeStyle = 'rgb(107, 45, 92)';
                 drawTrapeze(context, this.trapeze.a, this.trapeze.b, this.trapeze.c, this.trapeze.d, this.unitSegmentCoefficient);
                 rotateIterations++;
