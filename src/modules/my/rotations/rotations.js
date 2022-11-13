@@ -5,7 +5,6 @@ export default class Fractals extends LightningElement {
     @track unitSegmentCoefficient = 1;
     @track isShowInfo = false;
     @track isBuilt = false;
-    @track isValidTrapeze = true;
     @track isRunning = false;
     @track myInterval;
     @track originTrapeze = {};
@@ -69,6 +68,14 @@ export default class Fractals extends LightningElement {
     }
 
     handleBuildOriginTrapeze(){
+        if(!this.isBuilt){
+            let modal = this.template.querySelector("my-modal");
+            modal.setVariant('error');
+            modal.setText('You need build trapeze before build origin');
+            modal.handleOpenModal()
+            return;
+        }
+
         this.outputTrapeze = {...this.originTrapeze};
         this.handleBuildTrapeze(true);
     }
@@ -103,10 +110,13 @@ export default class Fractals extends LightningElement {
         this.originTrapeze = {a: {...a}, b: {...b}, c: {...c}, d: {...d}};
         this.outputTrapeze = {a: {...a}, b: {...b}, c: {...c}, d: {...d}};
 
-        setUnitSegment(a, b, c, d, this.unitSegmentCoefficient)
+        setUnitSegment(a, b, c, d, this.unitSegmentCoefficient);
 
         if(!isFigureTrapeze(a,b,c,d)){
-            this.isValidTrapeze = false;
+            let modal = this.template.querySelector("my-modal");
+            modal.setVariant('error');
+            modal.setText('This figure is not trapeze');
+            modal.handleOpenModal();
             return;
         }
 
@@ -133,9 +143,13 @@ export default class Fractals extends LightningElement {
         context.strokeStyle = 'rgb(107, 45, 92)';
         drawTrapeze(context, a, b, c, d);
 
+        let modal = this.template.querySelector("my-modal");
+        modal.setVariant('success');
+        modal.setText('Trapeze is successfully built!');
+        modal.handleOpenModal()
+
         this.trapeze = {a: {...a}, b: {...b}, c: {...c}, d: {...d}};
         this.isBuilt = true;
-        this.isValidTrapeze = true;
     }
 
     handleShowInformation(){
@@ -164,6 +178,14 @@ export default class Fractals extends LightningElement {
     }
 
     handleRotate(){
+        if(!this.isBuilt){
+            let modal = this.template.querySelector("my-modal");
+            modal.setVariant('error');
+            modal.setText('You need build trapeze before apply transformation');
+            modal.handleOpenModal()
+            return;
+        }
+
         if(!this.isRunning){
             this.isRunning = true;
         } else {

@@ -1,7 +1,6 @@
 import { LightningElement, track } from 'lwc';
 import {fromRGBtoHSL, fromHSLtoRGB, xyzToRgb, rgbToXyz} from './../functions/functions.js';
 
-
 export default class Colors extends LightningElement {
     @track isShowInfo = false;
     @track initialBrightness = [];
@@ -31,6 +30,14 @@ export default class Colors extends LightningElement {
     }
 
     async handleChangeBrightness(event){
+        if(!this.isFileLoaded){
+            let modal = this.template.querySelector("my-modal");
+            modal.setVariant('error');
+            modal.setText('You can`t change brightness without image');
+            modal.handleOpenModal();
+            return;
+        }
+
         let index = -1;
         let newPercent = event.target.value
         let img = this.template.querySelector('[data-id="display-image"]');
@@ -139,10 +146,23 @@ export default class Colors extends LightningElement {
                 }
                 i++;
             }
+
+            let modal = this.template.querySelector("my-modal");
+            modal.setVariant('success');
+            modal.setText('File is loaded successfully!');
+            modal.handleOpenModal();
         };
     }
 
     handleDownloadImg(event){
+        if(!this.isFileLoaded){
+            let modal = this.template.querySelector("my-modal");
+            modal.setVariant('error');
+            modal.setText('You need upload file for downloading');
+            modal.handleOpenModal()
+            return;
+        }
+        
         let link = document.createElement('a');
         link.download = 'colorModified.png';
         link.href = this.template.querySelector('[data-id="display-image"]').src;

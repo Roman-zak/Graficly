@@ -1,0 +1,12 @@
+<template>
+    <div data-id="modal" class="modal">
+        <div class={classModalContent} style="grid-template-rows: 120px 80px; display: grid;">
+            <div style="height: 100%" class="slds-align_absolute-center">
+                <div class="modal-text" >{text}</div>
+            </div>
+            <div style="height: 100%" class="slds-align_absolute-center">
+                <button class="actionbutton" onclick={handleCloseModal}>Ok</button>
+            </div>
+        </div>
+    </div>
+</template>
