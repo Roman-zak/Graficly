@@ -92,10 +92,10 @@ export default class Colors extends LightningElement {
     handleLoadImg(event){
         let reader = new FileReader();
         reader.readAsDataURL(event.target.files[0]);
-
         reader.onload = () => {
             this.template.querySelector('[data-id="display-image"]').src = reader.result;
             this.template.querySelector('[data-id="display-image2"]').src = reader.result;
+            console.log(this.template.querySelector('[data-id="display-image"]'));
             this.firstChange = true;
             this.isFileLoaded = true;
             this.initialBrightness = [];
@@ -103,54 +103,44 @@ export default class Colors extends LightningElement {
             let i =0;
             this.template.querySelector('[data-id="display-image"]').onload = () => {
                 if(i===0){
-                    console.log("nw = "+this.template.querySelector('[data-id="display-image"]').naturalWidth);
-                    let img = new Image(this.template.querySelector('[data-id="display-image"]').naturalWidth,this.template.querySelector('[data-id="display-image"]').naturalHeight);
-                    img.src=reader.result;
-                    console.log(" img.src = "+ img.src);
-                    console.log("img" + img);
-                    let w = img.width;
-                    console.log("w" + w);
-                    let h = img.height;
-                    console.log("h" + h);
+                    let w = this.template.querySelector('[data-id="display-image"]').width;
+                    let h = this.template.querySelector('[data-id="display-image"]').height;
                     let canvas = document.createElement('canvas');
                     let context = canvas.getContext('2d');
                     canvas.height = h;
                     canvas.width = w;
-                    context.drawImage(img, 0, 0);
-
+                    context.drawImage(this.template.querySelector('[data-id="display-image"]'), 0, 0);
                     let originalPixels = context.getImageData(0, 0, w, h);
                     let currentPixels = context.getImageData(0, 0, w, h);
                     let tempPixel;
                     for(let I = 0, L = originalPixels.data.length; I < L; I += 4)
                     {
-                        if((I%(w*4))<(w*2)){
+                    //    if((I%(w*4))<(w*2)){
                         tempPixel =  rgbToXyz([originalPixels.data[I],originalPixels.data[I+1],originalPixels.data[I+2]]);
                         currentPixels.data[I] = tempPixel[0];
                         currentPixels.data[I + 1] = tempPixel[1];
                         currentPixels.data[I + 2] = tempPixel[2];
-                    }
+                    //}
                     }
                     for(let I = 0, L = currentPixels.data.length; I < L; I += 4)
                     {
-                        if((I%(w*4))<(w*2)){
+                     //   if((I%(w*4))<(w*2)){
                         tempPixel =  xyzToRgb([currentPixels.data[I],currentPixels.data[I+1],currentPixels.data[I+2]]);
                         currentPixels.data[I] = tempPixel[0];
                         currentPixels.data[I + 1] = tempPixel[1];
                         currentPixels.data[I + 2] = tempPixel[2];
-                        }
+                    //    }
                     }
 
                     context.putImageData(currentPixels, 0, 0);
-                    img.src = canvas.toDataURL();
-                    this.template.querySelector('[data-id="display-image"]').src =  img.src;
+                    // img.src = canvas.toDataURL();
+                    this.template.querySelector('[data-id="display-image"]').src = canvas.toDataURL();
+                    context.putImageData(originalPixels, 0, 0);
+                    // img.src = canvas.toDataURL();
+                    this.template.querySelector('[data-id="display-image2"]').src = canvas.toDataURL();
                 }
                 i++;
             }
-
-            let modal = this.template.querySelector("my-modal");
-            modal.setVariant('success');
-            modal.setText('File is loaded successfully!');
-            modal.handleOpenModal();
         };
     }
 
