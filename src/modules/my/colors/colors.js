@@ -88,9 +88,24 @@ export default class Colors extends LightningElement {
         context.putImageData(currentPixels, 0, 0);
         img.src = canvas.toDataURL();
     }
+    
+
 
     handleLoadImg(event){
+        var fileTypes = ['jpg', 'jpeg', 'png', 'jfif', 'pjpeg', 'pjp'];  //acceptable file types
         let reader = new FileReader();
+        var extension = event.target.files[0].name.split('.').pop().toLowerCase(),  //file extension from input file
+        isSuccess = fileTypes.indexOf(extension) > -1;  //is extension in acceptable types
+        if(!isSuccess){
+            let modal = this.template.querySelector("my-modal");
+            modal.setVariant('error');
+            modal.setText("This file is not an image (Choose theese extensions: .jpg, .jpeg, .png, .jfif, .pjpeg, .pjp )");
+           
+            modal.handleOpenModal();
+            return;
+            // alert('file isn`t an image'); \n\n(Choose theese extensions: .jpg, .jpeg, .png, .jfif, .pjpeg, .pjp )
+            // return;
+        }
         reader.readAsDataURL(event.target.files[0]);
         reader.onload = () => {
             this.template.querySelector('[data-id="display-image"]').src = reader.result;

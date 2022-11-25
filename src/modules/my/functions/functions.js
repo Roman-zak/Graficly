@@ -1,5 +1,5 @@
-export function drawMinkowski(ctx, iteration_count){
-    const context = ctx;    
+export function drawMinkowski(context, iteration_count){
+    //задаємо точки базового відрізка
     const startingPoints = {
          p1 : {
             x:250,
@@ -9,46 +9,58 @@ export function drawMinkowski(ctx, iteration_count){
             y:160
         }
     }
-
+    //функція ітерації побудови франкалу
+    //a,b - точки відрізка
+    //limit - кількість ітерацій що повинні відбутись
     const mincovski = (a, b, limit = 0) => {
+        //точка початку відрізка
         let p1 = {
             x: a.x,
             y: a.y
         }
+        //точка на базовому відрізку на віддалі 1/4 його довжини від точки p1
         let p2 = {
             x: (b.x + 3*a.x) / 4,
             y: (b.y + 3*a.y) / 4
         }
+        //точка на базовому відрізку на віддалі 1/2 його довжини від точки p1
         let p5 ={
             x: (a.x + b.x) / 2,
             y: (a.y + b.y) / 2
         }
+        //точка, результат повороту точки p5 на 270 градусів за годинниковою стрілкою навколо точки p2
         let p3 = {
             x: ((Math.cos(Math.PI*3/ 2) * (p5.x-p2.x)) + (Math.sin(Math.PI*3/ 2) * (p5.y-p2.y)) + p2.x),
             y: ((-1*Math.sin(Math.PI*3 /2) * (p5.x-p2.x)) + (Math.cos(Math.PI*3/ 2) *(p5.y-p2.y)) + p2.y)
         }
+        //точка, результат повороту точки p2 на 270 градусів за годинниковою стрілкою навколо точки p3
         let p4 = {
             x: ((Math.cos(Math.PI*3/ 2) * (p2.x-p3.x)) + (Math.sin(Math.PI*3/ 2) * (p2.y-p3.y)) + p3.x),
             y: ((-1*Math.sin(Math.PI*3 /2) * (p2.x-p3.x)) + (Math.cos(Math.PI*3/ 2) *(p2.y-p3.y)) + p3.y)
         }
+        //точка, результат повороту точки p4 на 180 градусів за годинниковою стрілкою навколо точки p5
         let p6 = {
             x: ((Math.cos(Math.PI) * (p4.x-p5.x)) + (Math.sin(Math.PI) * (p4.y-p5.y)) + p5.x),
             y: ((-1*Math.sin(Math.PI) * (p4.x-p5.x)) + (Math.cos(Math.PI) *(p4.y-p5.y)) + p5.y)
         }
+        //точка, результат повороту точки p5 на 90 градусів за годинниковою стрілкою навколо точки p6
         let p7 = {
             x: ((Math.cos(Math.PI/2) * (p5.x-p6.x)) + (Math.sin(Math.PI/2) * (p5.y-p6.y)) + p6.x),
             y: ((-1*Math.sin(Math.PI/2) * (p5.x-p6.x)) + (Math.cos(Math.PI/2) *(p5.y-p6.y)) + p6.y)
         }
+        //точка, результат повороту точки p6 на 90 градусів за годинниковою стрілкою навколо точки p7
         let p8 = {
             x: ((Math.cos(Math.PI/2) * (p6.x-p7.x)) + (Math.sin(Math.PI/2) * (p6.y-p7.y)) + p7.x),
             y: ((-1*Math.sin(Math.PI/2) * (p6.x-p7.x)) + (Math.cos(Math.PI/2) *(p6.y-p7.y)) + p7.y)
         }
+         //точка, результат повороту точки p7 на 270 градусів за годинниковою стрілкою навколо точки p8
         let p9 = {
             x: ((Math.cos(Math.PI*3/2) * (p7.x-p8.x)) + (Math.sin(Math.PI*3/2) * (p7.y-p8.y)) + p8.x),
             y: ((-1*Math.sin(Math.PI*3/2) * (p7.x-p8.x)) + (Math.cos(Math.PI*3/2) *(p7.y-p8.y)) + p8.y)
         }
 
         if (limit > 0) {
+             //якщо це не кінцева ітерація - почерговий рекурсивний виклик функції для кожного відрізка новоутвореної фігури
             mincovski(a, p1, limit - 1)
             mincovski(p1, p2, limit - 1)
             mincovski(p2, p3, limit - 1)
@@ -59,6 +71,7 @@ export function drawMinkowski(ctx, iteration_count){
             mincovski(p7, p8, limit - 1)
             mincovski(p8, p9, limit - 1)
         } else {
+            //почергова промальовка кожного з відрізків утвореної фігури
             context.beginPath()
             context.moveTo(a.x, a.y)
             context.lineTo(p1.x, p1.y)
@@ -73,37 +86,45 @@ export function drawMinkowski(ctx, iteration_count){
             context.stroke()
         }
     }
-    
+    //виклик функції для базового відрізка
     mincovski(startingPoints.p1, startingPoints.p2, iteration_count)    
 }
 
 export function drawLevy(iteration1, ctx1){
-
+    //x,y - початкові точки побудови відрізка
+    //length - довжина нового відрізка
+    //alpha - кут нахилу нового відрізка відносно базового
+    //iteration - кількість ітерацій побудови фракталу
+    //ctx - контекст тегу canvas
     const levy = ( x, y, length, alpha, iteration, ctx) => {
+        //функція конвертації градусів у радіани
         const toRadians = value  =>  Math.PI*(value / 180.0);
         
         if( iteration > 0 ) {
+            //розрахунок нової довжини відрізка для наступної ітерації
             length = (length / Math.sqrt(2));
 
+            //рекурсивний виклик функції побудови відрізка з поворотом на 45 градусів проти годинникової стрілки відносно базового 
             levy(x, y, length, (alpha + 45), (iteration - 1), ctx);
-
-            x = (x + (length * Math.cos(toRadians(alpha + 45))));
+            //розрахунок нових координат початку відрізка, що збігається з кінцем побудови за минулий виклик функції 
+            x = (x + (length * Math.cos(toRadians(alpha + 45)))); 
             y = (y + (length * Math.sin(toRadians(alpha + 45))));
-
-            levy(x, y, length, (alpha - 45), (iteration - 1), ctx);
-        } else {
+            //рекурсивний виклик функції побудови відрізка з поворотом на 45 градусів за годинниковою стрілкою відносно базового 
+            levy(x, y, length, (alpha - 45), (iteration - 1), ctx);//рекурсивний виклик функції
+        } else { 
+            //креслення відрізка
             ctx.beginPath();
-            ctx.moveTo( x, y );
+            ctx.moveTo( x, y ); 
             ctx.lineTo( x + (length * Math.cos(toRadians(alpha))), y + (length * Math.sin(toRadians(alpha))) );
             ctx.stroke();
         }
     }
 
-    levy(330, 90, 170, 0, iteration1, ctx1);
+    levy(330, 90, 170, 0, iteration1, ctx1); 
 }
 
-export function drawKoch(ctx, iteration_count){
-    const context = ctx;    
+export function drawKoch(context, iteration_count){
+  //задаємо точки базового трикутника
     const startingPoints = {
          p1 : {
             x:400,
@@ -116,29 +137,35 @@ export function drawKoch(ctx, iteration_count){
             y:300
         }
     }
-
+    //функція ітерації побудови франкалу
+    //a,b - точки відрізка
+    //limit - кількість ітерацій що повинні відбутись
     const koch = (a, b, limit = iteration_count) => {
+        
         let [dx, dy] = [b.x - a.x, b.y - a.y]
-
+        //точка на відрізку ab на віддалі 1/3 довжини ab від точки a
         let p1 = {
             x: a.x + dx / 3,
             y: a.y + dy / 3
         }
+        //точка на відрізку ab на віддалі 1/3 довжини ab від точки b
         let p3 = {
             x: b.x - dx / 3,
             y: b.y - dy / 3
         }
+        //точка, що разом з точками p1 та p3 формує рівносторонній трикутник шляхом повороту точки p3 на 300 градусів навколо точки p1
         let p2 = {
             x: (Math.cos(Math.PI*5 / 3) * (p3.x-p1.x)) + (Math.sin(Math.PI *5/ 3) * (p3.y-p1.y)) + p1.x,
             y: (-1*Math.sin(Math.PI*5 / 3) * (p3.x-p1.x)) + (Math.cos(Math.PI *5/ 3) *(p3.y-p1.y)) + p1.y
         }
-
+        //якщо це не кінцева ітерація - почерговий рекурсивний виклик функції для кожного новоутвореного відрізка
         if (limit > 0) {
             koch(a, p1, limit - 1)
             koch(p1, p2, limit - 1)
             koch(p2, p3, limit - 1)
             koch(p3, b, limit - 1)
         } else {
+             //почергова промальовка кожного з відрізків утвореної фігури
             context.beginPath()
             context.moveTo(a.x, a.y)
             context.lineTo(p1.x, p1.y)
@@ -148,14 +175,14 @@ export function drawKoch(ctx, iteration_count){
             context.stroke()
         }
     }
-
+    //виклик функції для кожної зі сторін трикутника
     koch(startingPoints.p1, startingPoints.p2)
     koch(startingPoints.p2, startingPoints.p3)
     koch(startingPoints.p3, startingPoints.p1)
 }
 
-export function drawIce(ctx, iteration_count){
-    const context = ctx;    
+export function drawIce(context, iteration_count){
+    //задаємо точки базового квадрата
     const startingPoints = {
         p1 : {
             x:325,
@@ -171,22 +198,28 @@ export function drawIce(ctx, iteration_count){
             y:250
         }
     }
+    //функція ітерації побудови франкалу
+    //a,b - точки відрізка
+    //limit - кількість ітерацій що повинні відбутись
     const ice = (a, b, limit = 0) => {
+        //початкова точка побудови відрізка, що розміщується посередині базового відрізка
         let p1 = {
             x: (a.x + b.x)/2,
             y: (a.y + b.y)/2
         }
+        //кінцева точка побудови відрізка, що перпендикулярний до базового і довжиною 1/3 базового
         let p2 = {
             x: ((Math.cos(Math.PI/ 2) * (b.x-a.x)/3) + (Math.sin(Math.PI/ 2) * (b.y-a.y)/3) + p1.x),
             y: ((-1*Math.sin(Math.PI /2) * (b.x-a.x)/3) + (Math.cos(Math.PI/ 2) *(b.y-a.y)/3) + p1.y)
         }
-        
+        //якщо це не кінцева ітерація - почерговий рекурсивний виклик функції для кожного новоутвореного відрізка
         if (limit > 0) {
             ice(a, p1, limit - 1)
             ice(p1, p2, limit - 1)
             ice(p2, p1, limit - 1)
             ice(p1, b, limit - 1)
         } else {
+            //почергова промальовка кожного з відрізків утвореної фігури
             context.beginPath()
             context.moveTo(a.x, a.y)
             context.lineTo(p1.x, p1.y)
@@ -196,7 +229,7 @@ export function drawIce(ctx, iteration_count){
             context.stroke()
         }
     }
-
+    //виклик функції для кожної зі сторін квадрата
     ice(startingPoints.p1, startingPoints.p2, iteration_count)
     ice(startingPoints.p2, startingPoints.p3, iteration_count)
     ice(startingPoints.p3, startingPoints.p4, iteration_count)
@@ -342,34 +375,39 @@ export function rotate(trapeze, point, clockwise, totlScale){
         [trapeze.c.x, trapeze.c.y, 1],
         [trapeze.d.x, trapeze.d.y, 1]
     ];
-    let transformMtrx = [
-        [scale*Math.cos(angl), scale*clockwiseKoef*Math.sin(angl), 0],
-        [-1*clockwiseKoef*scale*Math.sin(angl),scale*Math.cos(angl), 0],
+    let transformMtrx = 
+    [
+        [scale*Math.cos(angl),                                       scale*clockwiseKoef*Math.sin(angl),                           0],
+        [-1*clockwiseKoef*scale*Math.sin(angl),                      scale*Math.cos(angl),                                         0],
         [scale*(n*clockwiseKoef*Math.sin(angl)-m*Math.cos(angl))+m,  scale*(-1*m*clockwiseKoef*Math.sin(angl)-n*Math.cos(angl))+n, 1]
     ]
     let newTrapeze = multiplyMatrices(trapezeMtrx,transformMtrx);
     //покрокове множення матриць
     //-----------------------------------------------------------
-    // let moveToZeroMtrx = [
-    //     [1,0,0],
-    //     [0,1,0],
+    // let moveToZeroMtrx = 
+    // [
+    //     [1,     0,   0],
+    //     [0,     1,   0],
     //     [-1*m, -1*n, 1]
     // ]
-    // let moveBackMtrx = [
-    //     [1,0,0],
-    //     [0,1,0],
+    // let moveBackMtrx = 
+    // [
+    //     [1, 0, 0],
+    //     [0, 1, 0],
     //     [m, n, 1]
     // ]
-    // let rotationMtrx = [
-    //     [Math.cos(angl), clockwiseKoef*Math.sin(angl), 0],
-    //     [-1*clockwiseKoef*Math.sin(angl),Math.cos(angl), 0],
-    //     [0,0, 1]
+    // let rotationMtrx = 
+    // [
+    //     [Math.cos(angl),                  clockwiseKoef*Math.sin(angl), 0],
+    //     [-1*clockwiseKoef*Math.sin(angl), Math.cos(angl),               0],
+    //     [0,                               0,                            1]
     // ];
    
-    // let scaleMtrx = [
-    //     [scale, 0, 0],
-    //     [0, scale, 0],
-    //     [0, 0, 1]
+    // let scaleMtrx = 
+    // [
+    //     [scale, 0,     0],
+    //     [0,     scale, 0],
+    //     [0,     0,     1]
     // ]
     // let newTrapeze = multiplyMatrices(trapezeMtrx,moveToZeroMtrx);
     // newTrapeze = multiplyMatrices(newTrapeze,rotationMtrx);
